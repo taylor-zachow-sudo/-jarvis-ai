@@ -1,3 +1,5 @@
+alert("Neue Version geladen");
+
 const status = document.getElementById("status");
 
 function speak(text){
