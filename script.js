@@ -71,7 +71,9 @@ function startJarvis(){
 
         status.innerHTML="Du: "+text;
 
-        answer(text);
+        sendMessage(text);
+
+
 
     };
 
