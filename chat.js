@@ -3,6 +3,10 @@
 // JARVIS - EINFACHE CHAT VERSION
 // ==========================================
 
+function openApp(url) {
+    window.location.href = url;
+}
+
 function jarvisReply(text) {
 
     const originalText = text;
