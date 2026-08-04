@@ -1,44 +1,153 @@
-const OLLAMA_URL = "http://localhost:11434/api/chat";
-const MODEL = "llama3.2";
+```javascript
+function jarvisReply(text) {
 
-let conversation = [
-    {
-        role: "system",
-        content:
-            "Du bist JARVIS, ein intelligenter persönlicher Assistent. " +
-            "Antworte auf Deutsch. Sei ruhig, höflich, intelligent und präzise. " +
-            "Antworte natürlich wie in einem echten Gespräch. " +
-            "Nenne dich selbst JARVIS."
+    const originalText = text;
+    const lower = text.toLowerCase();
+
+    // Namen speichern
+    if (lower.includes("mein name ist ")) {
+
+        const start = lower.indexOf("mein name ist ") + 14;
+        const name = originalText.substring(start).trim();
+
+        if (name) {
+            saveMemory("name", name);
+            return "Verstanden. Ich werde mir deinen Namen merken.";
+        }
     }
-];
 
+    // Namen abrufen
+    if (
+        lower.includes("wie heiße ich") ||
+        lower.includes("kennst du meinen namen")
+    ) {
 
-// ==================================================
-// NACHRICHT INS CHATFENSTER
-// ==================================================
+        const name = getMemory("name");
 
-function addMessage(text, type) {
+        if (name) {
+            return "Du heißt " + name + ".";
+        }
 
-    const chat = document.getElementById("chat");
+        return "Du hast mir deinen Namen noch nicht gesagt.";
+    }
 
-    if (!chat) return;
+    // Namen vergessen
+    if (lower.includes("vergiss meinen namen")) {
+        deleteMemory("name");
+        return "Verstanden. Ich habe deinen Namen vergessen.";
+    }
 
-    const message = document.createElement("div");
+    // Begrüßung
+    if (
+        lower.includes("hallo") ||
+        lower.includes("hi") ||
+        lower.includes("hey")
+    ) {
 
-    message.className = "message " + type;
-    message.textContent = text;
+        const name = getMemory("name");
 
-    chat.appendChild(message);
+        if (name) {
+            return "Hallo " + name + ".";
+        }
 
-    chat.scrollTop = chat.scrollHeight;
+        return "Hallo. Ich bin JARVIS.";
+    }
+
+    // Wer bist du?
+    if (
+        lower.includes("wie heißt du") ||
+        lower.includes("wer bist du")
+    ) {
+        return "Ich bin JARVIS, dein persönlicher Assistent.";
+    }
+
+    // Befinden
+    if (
+        lower.includes("wie geht es dir") ||
+        lower.includes("wie geht's dir")
+    ) {
+        return "Alle Systeme funktionieren einwandfrei.";
+    }
+
+    // Uhrzeit
+    if (
+        lower.includes("wie spät") ||
+        lower.includes("wie viel uhr") ||
+        lower.includes("uhrzeit")
+    ) {
+
+        const jetzt = new Date();
+
+        return "Es ist " +
+            jetzt.getHours() +
+            " Uhr " +
+            String(jetzt.getMinutes()).padStart(2, "0") +
+            ".";
+    }
+
+    // Datum
+    if (
+        lower.includes("datum") ||
+        lower.includes("welcher tag ist heute")
+    ) {
+
+        return "Heute ist der " +
+            new Date().toLocaleDateString("de-DE") +
+            ".";
+    }
+
+    // Danke
+    if (
+        lower.includes("danke") ||
+        lower.includes("dankeschön")
+    ) {
+        return "Gerne.";
+    }
+
+    // Auf Wiedersehen
+    if (
+        lower.includes("tschüss") ||
+        lower.includes("auf wiedersehen")
+    ) {
+        return "Auf Wiedersehen.";
+    }
+
+    // Standardantwort
+    return "Diese Funktion muss ich noch lernen.";
 }
 
 
 // ==================================================
-// NACHRICHT SENDEN
+// CHAT NACHRICHT HINZUFÜGEN
 // ==================================================
 
-async function sendText() {
+function addMessage(text, type) {
+
+    const chat =
+        document.getElementById("chat");
+
+    if (!chat) return;
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message " + type;
+
+    message.textContent = text;
+
+    chat.appendChild(message);
+
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+
+
+// ==================================================
+// TEXT SENDEN
+// ==================================================
+
+function sendText() {
 
     const input =
         document.getElementById("userInput");
@@ -50,123 +159,32 @@ async function sendText() {
 
     if (!text) return;
 
-    // Benutzer-Nachricht anzeigen
+
+    // Benutzer-Nachricht
     addMessage(
         "Du: " + text,
         "user-message"
     );
 
+
+    // Eingabefeld leeren
     input.value = "";
 
-    // Gespräch speichern
-    conversation.push({
-        role: "user",
-        content: text
-    });
+
+    // JARVIS Antwort
+    const answer =
+        jarvisReply(text);
 
 
-    // Status
-    const status =
-        document.getElementById("status");
-
-    if (status) {
-        status.innerHTML =
-            "🧠 JARVIS DENKT...";
-    }
+    // Antwort anzeigen
+    addMessage(
+        "JARVIS: " + answer,
+        "jarvis-message"
+    );
 
 
-    try {
-
-        // Anfrage an Ollama
-        const response =
-            await fetch(OLLAMA_URL, {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    model: MODEL,
-
-                    messages:
-                        conversation,
-
-                    stream: false
-                })
-            });
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Ollama Fehler: " +
-                response.status
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const answer =
-            data.message?.content;
-
-
-        if (!answer) {
-
-            throw new Error(
-                "JARVIS hat keine Antwort erhalten."
-            );
-        }
-
-
-        // Antwort speichern
-        conversation.push({
-
-            role: "assistant",
-
-            content: answer
-        });
-
-
-        // Antwort anzeigen
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        // Antwort sprechen
-        speak(answer);
-
-
-    } catch (error) {
-
-        console.error(
-            "KI Fehler:",
-            error
-        );
-
-
-        const errorMessage =
-            "Ich kann momentan keine Verbindung zu meinem KI-System herstellen.";
-
-
-        addMessage(
-            "JARVIS: " + errorMessage,
-            "jarvis-message"
-        );
-
-
-        if (status) {
-
-            status.innerHTML =
-                "❌ KI nicht erreichbar";
-        }
-    }
+    // Antwort sprechen
+    speak(answer);
 }
+```
+
