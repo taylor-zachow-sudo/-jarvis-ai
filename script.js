@@ -1,99 +1,83 @@
+// ==========================================
+// JARVIS - STIMME & SPRACHSTEUERUNG
+// ==========================================
+
 const status = document.getElementById("status");
 
 
-// ==================================================
-// JARVIS SPRACHAUSGABE
-// ==================================================
+// ==========================================
+// JARVIS SPRICHT
+// ==========================================
 
 function speak(text) {
 
     console.log("JARVIS spricht:", text);
 
-    if (status) {
-        status.innerHTML = "🔊 JARVIS: " + text;
-    }
-
-    // Prüfen, ob der Browser Sprache unterstützt
-    if (!("speechSynthesis" in window)) {
-        alert("Dein Browser unterstützt keine Sprachausgabe.");
+    if (!window.speechSynthesis) {
+        console.error("Sprachausgabe wird nicht unterstützt.");
         return;
     }
 
-    // Vorherige Sprache stoppen
+    // Vorherige Sprachausgabe stoppen
     window.speechSynthesis.cancel();
 
-    const msg = new SpeechSynthesisUtterance(text);
+    const message = new SpeechSynthesisUtterance(text);
+
+    // Sprache
+    message.lang = "de-DE";
+
+    // JARVIS-Stil
+    message.rate = 0.78;
+    message.pitch = 0.35;
+    message.volume = 1.0;
 
 
-    // ==================================================
-    // JARVIS STIMME EINSTELLUNGEN
-    // ==================================================
-
-    // Deutsch
-    msg.lang = "de-DE";
-
-    // Langsam und kontrolliert
-    msg.rate = 0.78;
-
-    // Sehr tief
-    msg.pitch = 0.20;
-
-    // Maximale Lautstärke
-    msg.volume = 1.0;
-
-
-    // ==================================================
-    // DEUTSCHE STIMME AUSWÄHLEN
-    // ==================================================
+    // ==========================================
+    // STIMMEN SUCHEN
+    // ==========================================
 
     const voices = window.speechSynthesis.getVoices();
 
     console.log("Verfügbare Stimmen:", voices);
 
-
-    // Erst deutsche Stimmen suchen
-    let germanVoices = voices.filter(v =>
-        v.lang &&
-        v.lang.toLowerCase().startsWith("de")
+    // Deutsche Stimmen
+    const germanVoices = voices.filter(voice =>
+        voice.lang &&
+        voice.lang.toLowerCase().startsWith("de")
     );
 
 
-    // Bevorzugte tiefe Stimmen
-    const preferredVoice =
-        germanVoices.find(v =>
-            v.name.toLowerCase().includes("david")
+    // Eine deutsche Stimme auswählen
+    const selectedVoice =
+        germanVoices.find(voice =>
+            voice.name.toLowerCase().includes("male")
         ) ||
-        germanVoices.find(v =>
-            v.name.toLowerCase().includes("markus")
+        germanVoices.find(voice =>
+            voice.name.toLowerCase().includes("mann")
         ) ||
-        germanVoices.find(v =>
-            v.name.toLowerCase().includes("male")
-        ) ||
-        germanVoices.find(v =>
-            v.name.toLowerCase().includes("mann")
+        germanVoices.find(voice =>
+            voice.lang.toLowerCase() === "de-de"
         ) ||
         germanVoices[0];
 
 
-    if (preferredVoice) {
+    if (selectedVoice) {
 
-        msg.voice = preferredVoice;
-
-        msg.lang = preferredVoice.lang;
+        message.voice = selectedVoice;
 
         console.log(
-            "JARVIS verwendet Stimme:",
-            preferredVoice.name,
-            preferredVoice.lang
+            "JARVIS Stimme:",
+            selectedVoice.name,
+            selectedVoice.lang
         );
     }
 
 
-    // ==================================================
-    // SPRECHSTATUS
-    // ==================================================
+    // ==========================================
+    // SPRACHSTATUS
+    // ==========================================
 
-    msg.onstart = function() {
+    message.onstart = function() {
 
         console.log("JARVIS beginnt zu sprechen.");
 
@@ -103,7 +87,7 @@ function speak(text) {
     };
 
 
-    msg.onend = function() {
+    message.onend = function() {
 
         console.log("JARVIS ist fertig.");
 
@@ -113,31 +97,27 @@ function speak(text) {
     };
 
 
-    msg.onerror = function(event) {
+    message.onerror = function(event) {
 
         console.error(
-            "JARVIS Sprachfehler:",
-            event
+            "Sprachfehler:",
+            event.error
         );
 
         if (status) {
-            status.innerHTML = "❌ Sprachfehler";
+            status.innerHTML = "SYSTEM ONLINE";
         }
     };
 
 
-    // ==================================================
-    // JARVIS SPRECHEN
-    // ==================================================
-
-    window.speechSynthesis.speak(msg);
+    // Sprechen
+    window.speechSynthesis.speak(message);
 }
 
 
-
-// ==================================================
+// ==========================================
 // STIMMEN NACHLADEN
-// ==================================================
+// ==========================================
 
 if ("speechSynthesis" in window) {
 
@@ -154,23 +134,22 @@ if ("speechSynthesis" in window) {
 }
 
 
-
-// ==================================================
-// JARVIS SPRACHSTEUERUNG
-// ==================================================
+// ==========================================
+// MIKROFON / JARVIS AKTIVIEREN
+// ==========================================
 
 function startJarvis() {
 
-    const Recognition =
+    const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
 
-    // Prüfen, ob Mikrofon unterstützt wird
-    if (!Recognition) {
+    // Browser unterstützt Mikrofon nicht
+    if (!SpeechRecognition) {
 
         alert(
-            "Spracherkennung wird von diesem Browser nicht unterstützt."
+            "Die Spracherkennung wird von deinem Browser nicht unterstützt."
         );
 
         return;
@@ -178,12 +157,12 @@ function startJarvis() {
 
 
     const recognition =
-        new Recognition();
+        new SpeechRecognition();
 
 
-    // ==================================================
+    // ==========================================
     // SPRACHEINSTELLUNGEN
-    // ==================================================
+    // ==========================================
 
     recognition.lang = "de-DE";
 
@@ -192,27 +171,26 @@ function startJarvis() {
     recognition.continuous = false;
 
 
-    // ==================================================
+    // ==========================================
     // JARVIS HÖRT ZU
-    // ==================================================
+    // ==========================================
 
     recognition.onstart = function() {
 
         console.log(
-            "JARVIS hört zu..."
+            "JARVIS hört zu."
         );
 
         if (status) {
-
             status.innerHTML =
                 "🎤 JARVIS HÖRT ZU...";
         }
     };
 
 
-    // ==================================================
+    // ==========================================
     // SPRACHE ERKANNT
-    // ==================================================
+    // ==========================================
 
     recognition.onresult = function(event) {
 
@@ -221,40 +199,44 @@ function startJarvis() {
 
 
         console.log(
-            "Erkannt:",
+            "Du hast gesagt:",
             text
         );
 
 
         const input =
-            document.getElementById(
-                "userInput"
+            document.getElementById("userInput");
+
+
+        if (!input) {
+            console.error(
+                "userInput wurde nicht gefunden."
             );
+            return;
+        }
 
 
-        if (input) {
+        // Erkannte Sprache ins Eingabefeld
+        input.value = text;
 
-            input.value = text;
 
+        // Nachricht automatisch senden
+        if (typeof sendText === "function") {
 
-            // Nachricht automatisch senden
-            if (typeof sendText === "function") {
+            sendText();
 
-                sendText();
+        } else {
 
-            } else {
-
-                console.error(
-                    "sendText() wurde nicht gefunden."
-                );
-            }
+            console.error(
+                "sendText() wurde nicht gefunden."
+            );
         }
     };
 
 
-    // ==================================================
+    // ==========================================
     // MIKROFONFEHLER
-    // ==================================================
+    // ==========================================
 
     recognition.onerror = function(event) {
 
@@ -267,27 +249,24 @@ function startJarvis() {
         if (status) {
 
             status.innerHTML =
-                "❌ Mikrofonfehler: " +
+                "Mikrofonfehler: " +
                 event.error;
         }
     };
 
 
-    // ==================================================
-    // SPRACHERKENNUNG BEENDET
-    // ==================================================
+    // ==========================================
+    // MIKROFON BEENDET
+    // ==========================================
 
     recognition.onend = function() {
 
         console.log(
-            "Spracherkennung beendet."
+            "JARVIS hört nicht mehr zu."
         );
     };
 
 
-    // ==================================================
-    // MIKROFON STARTEN
-    // ==================================================
-
+    // Mikrofon starten
     recognition.start();
 }
