@@ -8,6 +8,49 @@ function jarvisReply(text) {
     const originalText = text;
     const lower = text.toLowerCase();
 
+    // ==========================================
+    // APPS ÖFFNEN
+    // ==========================================
+
+    if (
+        lower.includes("öffne youtube") ||
+        lower.includes("starte youtube")
+    ) {
+        openApp("https://youtube.com");
+        return "Ich öffne YouTube.";
+    }
+
+    if (
+        lower.includes("öffne whatsapp") ||
+        lower.includes("starte whatsapp")
+    ) {
+        openApp("https://wa.me/");
+        return "Ich öffne WhatsApp.";
+    }
+
+    if (
+        lower.includes("öffne spotify") ||
+        lower.includes("starte spotify")
+    ) {
+        openApp("https://open.spotify.com");
+        return "Ich öffne Spotify.";
+    }
+
+    if (
+        lower.includes("öffne instagram") ||
+        lower.includes("starte instagram")
+    ) {
+        openApp("https://instagram.com");
+        return "Ich öffne Instagram.";
+    }
+
+    if (
+        lower.includes("öffne tiktok") ||
+        lower.includes("starte tiktok")
+    ) {
+        openApp("https://tiktok.com");
+        return "Ich öffne TikTok.";
+    }
 
     // ==========================================
     // NAMEN SPEICHERN
