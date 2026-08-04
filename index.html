@@ -83,6 +83,22 @@ SYSTEM ONLINE
 
 <script src="chat.js"></script>
 <script src="script.js"></script>
+<script src="chat.js"></script>
+<script src="script.js"></script>
 
+<script>
+document.getElementById("sendButton").addEventListener("click", function() {
+    sendText();
+});
+
+document.getElementById("userInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        sendText();
+    }
+});
+</script>
+
+</body>
+</html>
 </body>
 </html>
