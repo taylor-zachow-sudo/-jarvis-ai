@@ -1,11 +1,14 @@
 const status = document.getElementById("status");
 
+let voiceMode = false;
+let recognition = null;
 
-function speak(text) {
+function speak(text, afterSpeak = null) {
 
     status.innerHTML = "JARVIS: " + text;
 
     if (!window.speechSynthesis) {
+        if (afterSpeak) afterSpeak();
         return;
     }
 
@@ -13,79 +16,105 @@ function speak(text) {
 
     const msg = new SpeechSynthesisUtterance(text);
 
+    msg.lang = "de-DE";
     msg.rate = 0.82;
     msg.pitch = 0.65;
     msg.volume = 1;
 
     const voices = window.speechSynthesis.getVoices();
 
-    // Bevorzugt eine englische/britische Stimme
-    const voice =
-        voices.find(v => v.lang === "en-GB") ||
-        voices.find(v => v.lang.startsWith("en-GB")) ||
-        voices.find(v => v.lang.startsWith("en"));
+    const germanVoice = voices.find(v =>
+        v.lang && v.lang.toLowerCase().startsWith("de")
+    );
 
-    if (voice) {
-        msg.voice = voice;
+    if (germanVoice) {
+        msg.voice = germanVoice;
     }
 
-    // Für britische Stimme
-    msg.lang = "en-GB";
+    if (afterSpeak) {
+        msg.onend = afterSpeak;
+    }
 
     window.speechSynthesis.speak(msg);
 }
 
 
-// iPhone/Safari lädt Stimmen manchmal erst später
-window.speechSynthesis.onvoiceschanged = function() {
-    window.speechSynthesis.getVoices();
-};
-
-
-function startJarvis() {
+function startVoiceMode() {
 
     const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
     if (!Recognition) {
-        alert("Dein Browser unterstützt keine Spracheingabe.");
+        alert("Dein iPhone-Browser unterstützt diesen Sprachmodus nicht.");
         return;
     }
 
-    const recognition = new Recognition();
+    voiceMode = true;
+
+    recognition = new Recognition();
 
     recognition.lang = "de-DE";
     recognition.interimResults = false;
+    recognition.continuous = false;
 
-    recognition.start();
+    recognition.onstart = function() {
+        status.innerHTML = "🎤 JARVIS HÖRT ZU...";
+    };
 
     recognition.onresult = function(event) {
 
         const text =
             event.results[0][0].transcript;
 
-        status.innerHTML = "Du: " + text;
-
         const input =
             document.getElementById("userInput");
 
         if (input) {
-
             input.value = text;
-
             sendText();
-
-        } else {
-
-            const answer = jarvisReply(text);
-
-            addMessage(
-                "JARVIS: " + answer,
-                "jarvis-message"
-            );
-
-            speak(answer);
         }
     };
+
+    recognition.onerror = function(event) {
+
+        console.log("Spracherkennung:", event.error);
+
+        if (voiceMode) {
+            setTimeout(listenAgain, 1000);
+        }
+    };
+
+    recognition.onend = function() {
+
+        if (voiceMode) {
+            setTimeout(listenAgain, 800);
+        }
+    };
+
+    listenAgain();
+}
+
+
+function listenAgain() {
+
+    if (!voiceMode || !recognition) return;
+
+    try {
+        recognition.start();
+    } catch (error) {
+        console.log("Mikrofon bereits aktiv");
+    }
+}
+
+
+function stopVoiceMode() {
+
+    voiceMode = false;
+
+    if (recognition) {
+        recognition.stop();
+    }
+
+    status.innerHTML = "SYSTEM ONLINE";
 }
