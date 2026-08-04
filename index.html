@@ -3,8 +3,11 @@
 <html lang="de">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>JARVIS AI</title>
 
@@ -15,15 +18,23 @@
 }
 
 body {
+
     margin: 0;
+
     background: #050b14;
+
     font-family: Arial, sans-serif;
+
     color: #00d9ff;
+
     height: 100vh;
+
     overflow: hidden;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
 }
 
@@ -31,6 +42,7 @@ body {
 /* JARVIS */
 
 .circle {
+
     width: 200px;
     height: 200px;
 
@@ -45,14 +57,18 @@ body {
     animation: pulse 2s infinite;
 
     display: flex;
+
     justify-content: center;
+
     align-items: center;
 
     font-size: 30px;
+
     font-weight: bold;
 
     margin-top: 30px;
 }
+
 
 @keyframes pulse {
 
@@ -73,7 +89,9 @@ body {
 /* STATUS */
 
 #status {
+
     margin-top: 15px;
+
     font-size: 18px;
 }
 
@@ -83,6 +101,7 @@ body {
 #chat {
 
     width: 90%;
+
     max-width: 600px;
 
     height: 45vh;
@@ -100,8 +119,6 @@ body {
     background: #06121f;
 }
 
-
-/* NACHRICHTEN */
 
 .message {
 
@@ -200,7 +217,6 @@ body {
 #sendButton:active {
 
     transform: scale(0.9);
-
 }
 
 
@@ -235,28 +251,6 @@ body {
     cursor: pointer;
 }
 
-
-@media (max-width: 600px) {
-
-    .circle {
-
-        width: 160px;
-        height: 160px;
-
-        font-size: 24px;
-
-    }
-
-    #chat {
-
-        width: 95%;
-
-        height: 43vh;
-
-    }
-
-}
-
 </style>
 
 </head>
@@ -275,7 +269,8 @@ SYSTEM ONLINE
 </div>
 
 
-<div id="chat"></div>
+<div id="chat">
+</div>
 
 
 <div class="input-area">
@@ -318,83 +313,279 @@ SYSTEM ONLINE
 </div>
 
 
-<!-- DATEIEN -->
+<!-- ==========================================
+     DEINE DATEIEN
+========================================== -->
 
-<script src="memory.js"></script>
-<script src="weather.js"></script>
-<script src="reminders.js"></script>
-<script src="script.js"></script>
-<script src="chat.js"></script>
+<script src="memory.js?v=10"></script>
+
+<script src="weather.js?v=10"></script>
+
+<script src="reminders.js?v=10"></script>
+
+<script src="script.js?v=10"></script>
+
+<script src="chat.js?v=10"></script>
 
 
-<!-- BUTTONEN -->
+<!-- ==========================================
+     SICHERER SENDEN-BUTTON
+========================================== -->
 
 <script>
 
-console.log("JARVIS INDEX GELADEN");
+console.log("JARVIS INDEX STARTET");
 
 
-/* ==========================================
-   SENDEN
-========================================== */
+function sendText() {
 
-const sendButton =
-    document.getElementById("sendButton");
-
-const userInput =
-    document.getElementById("userInput");
+    console.log("SENDTEXT FUNKTION STARTET");
 
 
-sendButton.addEventListener("click", function() {
+    const input =
+        document.getElementById("userInput");
 
-    console.log("SENDEN BUTTON GEDRÜCKT");
 
-    if (typeof sendText === "function") {
+    const chat =
+        document.getElementById("chat");
 
-        sendText();
 
-    } else {
-
-        console.error(
-            "FEHLER: sendText() existiert nicht!"
-        );
+    if (!input || !chat) {
 
         alert(
-            "JARVIS Fehler: chat.js wurde nicht geladen."
+            "JARVIS: Eingabefeld oder Chat fehlt."
         );
+
+        return;
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+    }
+
+
+    // Deine Nachricht
+
+    const userMessage =
+        document.createElement("div");
+
+
+    userMessage.className =
+        "message user-message";
+
+
+    userMessage.textContent =
+        "Du: " + text;
+
+
+    chat.appendChild(
+        userMessage
+    );
+
+
+    // Eingabe löschen
+
+    input.value = "";
+
+
+    // Einfache Antworten
+
+    let answer =
+        "Diese Funktion muss ich noch lernen.";
+
+
+    const lower =
+        text.toLowerCase();
+
+
+    if (
+        lower === "hallo" ||
+        lower === "hi" ||
+        lower === "hey"
+    ) {
+
+        answer =
+            "Hallo. Ich bin JARVIS.";
 
     }
 
-});
+
+    else if (
+        lower.includes("mein name ist ")
+    ) {
+
+        const name =
+            text
+            .substring(
+                lower.indexOf("mein name ist ") + 14
+            )
+            .trim();
+
+
+        if (
+            typeof saveMemory ===
+            "function"
+        ) {
+
+            saveMemory(
+                "name",
+                name
+            );
+
+        }
+
+
+        answer =
+            "Verstanden. Ich werde mir deinen Namen merken.";
+
+    }
+
+
+    else if (
+        lower.includes("wie heiße ich")
+    ) {
+
+        let name = null;
+
+
+        if (
+            typeof getMemory ===
+            "function"
+        ) {
+
+            name =
+                getMemory("name");
+
+        }
+
+
+        if (name) {
+
+            answer =
+                "Du heißt " +
+                name +
+                ".";
+
+        }
+
+        else {
+
+            answer =
+                "Du hast mir deinen Namen noch nicht gesagt.";
+
+        }
+
+    }
+
+
+    else if (
+        lower.includes("wer bist du") ||
+        lower.includes("wie heißt du")
+    ) {
+
+        answer =
+            "Ich bin JARVIS, dein persönlicher Assistent.";
+
+    }
+
+
+    else if (
+        lower.includes("danke")
+    ) {
+
+        answer =
+            "Gerne.";
+
+    }
+
+
+    // JARVIS Nachricht
+
+    const jarvisMessage =
+        document.createElement("div");
+
+
+    jarvisMessage.className =
+        "message jarvis-message";
+
+
+    jarvisMessage.textContent =
+        "JARVIS: " + answer;
+
+
+    chat.appendChild(
+        jarvisMessage
+    );
+
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+
+    // Stimme
+
+    if (
+        typeof speak ===
+        "function"
+    ) {
+
+        speak(answer);
+
+    }
+
+
+    console.log(
+        "JARVIS Antwort:",
+        answer
+    );
+
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+document
+    .getElementById("sendButton")
+    .addEventListener(
+        "click",
+        function() {
+
+            sendText();
+
+        }
+    );
 
 
 /* ==========================================
    ENTER
 ========================================== */
 
-userInput.addEventListener("keydown", function(event) {
+document
+    .getElementById("userInput")
+    .addEventListener(
+        "keydown",
+        function(event) {
 
-    if (event.key === "Enter") {
+            if (
+                event.key === "Enter"
+            ) {
 
-        event.preventDefault();
+                event.preventDefault();
 
-        console.log("ENTER GEDRÜCKT");
+                sendText();
 
-        if (typeof sendText === "function") {
-
-            sendText();
-
-        } else {
-
-            alert(
-                "JARVIS Fehler: chat.js wurde nicht geladen."
-            );
+            }
 
         }
-
-    }
-
-});
+    );
 
 
 /* ==========================================
@@ -402,24 +593,24 @@ userInput.addEventListener("keydown", function(event) {
 ========================================== */
 
 document
-.getElementById("voiceButton")
-.addEventListener("click", function() {
+    .getElementById("voiceButton")
+    .addEventListener(
+        "click",
+        function() {
 
-    if (typeof speak === "function") {
+            if (
+                typeof speak ===
+                "function"
+            ) {
 
-        speak(
-            "Hallo. Ich bin JARVIS."
-        );
+                speak(
+                    "Hallo. Ich bin JARVIS."
+                );
 
-    } else {
+            }
 
-        alert(
-            "JARVIS Fehler: script.js wurde nicht geladen."
-        );
-
-    }
-
-});
+        }
+    );
 
 
 /* ==========================================
@@ -427,30 +618,29 @@ document
 ========================================== */
 
 document
-.getElementById("micButton")
-.addEventListener("click", function() {
+    .getElementById("micButton")
+    .addEventListener(
+        "click",
+        function() {
 
-    if (typeof startJarvis === "function") {
+            if (
+                typeof startJarvis ===
+                "function"
+            ) {
 
-        startJarvis();
+                startJarvis();
 
-    } else {
+            }
 
-        alert(
-            "JARVIS Fehler: startJarvis() wurde nicht gefunden."
-        );
-
-    }
-
-});
+        }
+    );
 
 
 console.log(
-    "JARVIS: Alle Buttons wurden verbunden."
+    "JARVIS IST BEREIT"
 );
 
 </script>
-
 
 </body>
 
