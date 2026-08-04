@@ -3,25 +3,21 @@ const status = document.getElementById("status");
 function speak(text) {
     status.innerHTML = "JARVIS: " + text;
 
-    if (!window.speechSynthesis) return;
+    if (!window.speechSynthesis) {
+        return;
+    }
 
     window.speechSynthesis.cancel();
 
     const msg = new SpeechSynthesisUtterance(text);
 
-    msg.rate = 0.78;
-    msg.pitch = 0.45;
+    msg.lang = "de-DE";
+    msg.rate = 0.85;
+    msg.pitch = 0.7;
     msg.volume = 1;
 
-    const voices = window.speechSynthesis.getVoices();
-
-    const voice =
-        voices.find(v => v.lang && v.lang.toLowerCase() === "en-gb") ||
-        voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"));
-
-    if (voice) {
-        msg.voice = voice;
-    }
+    window.speechSynthesis.speak(msg);
+}
 
     msg.lang = voice ? voice.lang : "en-GB";
 
