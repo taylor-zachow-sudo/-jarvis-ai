@@ -1,47 +1,28 @@
-const chatHistory = [];
+function addMessage(text, type) {
+    const chat = document.getElementById("chat");
 
-function jarvisReply(message) {
+    const message = document.createElement("div");
+    message.className = "message " + type;
+    message.textContent = text;
 
-    message = message.toLowerCase();
-
-    if (message.includes("hallo")) {
-        return "Hallo! Schön, dass du da bist.";
-    }
-
-    if (message.includes("wie geht")) {
-        return "Mir geht es hervorragend. Ich bin bereit, dir zu helfen.";
-    }
-
-    if (message.includes("wie heißt du")) {
-        return "Ich bin JARVIS.";
-    }
-
-    if (message.includes("wer hat dich gebaut")) {
-        return "Ich werde gerade von Taylor und ChatGPT entwickelt.";
-    }
-
-    if (message.includes("uhr")) {
-        const d = new Date();
-        return "Es ist " + d.getHours() + ":" +
-        String(d.getMinutes()).padStart(2,"0");
-    }
-
-    if (message.includes("datum")) {
-        return new Date().toLocaleDateString("de-DE");
-    }
-
-    return "Das weiß ich noch nicht. Aber ich lerne ständig dazu.";
+    chat.appendChild(message);
+    chat.scrollTop = chat.scrollHeight;
 }
 
-function sendMessage(text){
+function sendText() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+
+    if (text === "") return;
+
+    addMessage("Du: " + text, "user-message");
+
+    input.value = "";
 
     const answer = jarvisReply(text);
 
+    addMessage("JARVIS: " + answer, "jarvis-message");
+
     speak(answer);
-
-    chatHistory.push({
-        user:text,
-        jarvis:answer
-    });
-
 }
+        
