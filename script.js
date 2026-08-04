@@ -9,14 +9,24 @@ function speak(text) {
 
     const msg = new SpeechSynthesisUtterance(text);
 
-    // JARVIS-Stil
-    msg.rate = 0.82;
-    msg.pitch = 0.55;
+    msg.rate = 0.78;
+    msg.pitch = 0.45;
     msg.volume = 1;
 
     const voices = window.speechSynthesis.getVoices();
 
-    // Bevorzugt eine britische männliche Stimme
+    const voice =
+        voices.find(v => v.lang && v.lang.toLowerCase() === "en-gb") ||
+        voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+
+    if (voice) {
+        msg.voice = voice;
+    }
+
+    msg.lang = voice ? voice.lang : "en-GB";
+
+    window.speechSynthesis.speak(msg);
+}
     const voice =
         voices.find(v =>
             v.name.toLowerCase().includes("daniel")
