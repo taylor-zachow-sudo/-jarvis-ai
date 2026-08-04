@@ -1,3 +1,38 @@
+async function processMessage(text) {
+
+    const lower = text.toLowerCase();
+
+    if (
+        lower.includes("wetter") ||
+        lower.includes("temperatur")
+    ) {
+
+        let city = "Berlin";
+
+        const match = text.match(
+            /(?:in|für)\s+([a-zA-ZäöüÄÖÜß -]+)/i
+        );
+
+        if (match) {
+            city = match[1].trim();
+        }
+
+        addMessage("JARVIS: Ich prüfe das Wetter...", "jarvis-message");
+
+        const answer = await getWeather(city);
+
+        addMessage("JARVIS: " + answer, "jarvis-message");
+
+        if (typeof speak === "function") {
+            speak(answer);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 function jarvisReply(text) {
 
     const originalText = text;
