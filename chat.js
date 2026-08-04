@@ -1,5 +1,11 @@
 ```javascript
 // ==========================================
+// JARVIS CHAT.JS
+// Apps + Wetter + Erinnerungen + Name
+// ==========================================
+
+
+// ==========================================
 // APPS ÖFFNEN
 // ==========================================
 
@@ -16,7 +22,6 @@ function getWeatherCity(text) {
 
     const lower = text.toLowerCase();
 
-    // Wetter überhaupt gefragt?
     const isWeather =
         lower.includes("wetter") ||
         lower.includes("temperatur") ||
@@ -28,7 +33,6 @@ function getWeatherCity(text) {
         return null;
     }
 
-    // Stadt aus der Frage holen
     const patterns = [
         "wetter in ",
         "wetter für ",
@@ -42,7 +46,8 @@ function getWeatherCity(text) {
 
     for (const pattern of patterns) {
 
-        const position = lower.indexOf(pattern);
+        const position =
+            lower.indexOf(pattern);
 
         if (position !== -1) {
 
@@ -63,13 +68,181 @@ function getWeatherCity(text) {
 
 
 // ==========================================
+// ERINNERUNG ERSTELLEN
+// ==========================================
+
+function createReminderFromText(text) {
+
+    const lower =
+        text.toLowerCase();
+
+
+    // ------------------------------------------
+    // "IN 10 MINUTEN"
+    // ------------------------------------------
+
+    const minutesMatch =
+        lower.match(
+            /in\s+(\d+)\s+min(?:ute|uten)?/
+        );
+
+
+    if (minutesMatch) {
+
+        const minutes =
+            parseInt(minutesMatch[1]);
+
+
+        let reminderText =
+            text;
+
+
+        const anIndex =
+            lower.indexOf("an ");
+
+
+        if (anIndex !== -1) {
+
+            reminderText =
+                text.substring(
+                    anIndex + 3
+                ).trim();
+        }
+
+
+        if (!reminderText) {
+
+            reminderText =
+                "deine Erinnerung";
+        }
+
+
+        const time =
+            Date.now() +
+            minutes * 60 * 1000;
+
+
+        saveReminder(
+            reminderText,
+            time
+        );
+
+
+        return (
+            "Verstanden. Ich erinnere dich in " +
+            minutes +
+            " Minuten an " +
+            reminderText +
+            "."
+        );
+    }
+
+
+    // ------------------------------------------
+    // "UM 18 UHR"
+    // ------------------------------------------
+
+    const hourMatch =
+        lower.match(
+            /um\s+(\d{1,2})(?::(\d{2}))?\s*uhr/
+        );
+
+
+    if (hourMatch) {
+
+        const hour =
+            parseInt(hourMatch[1]);
+
+
+        const minute =
+            hourMatch[2]
+                ? parseInt(hourMatch[2])
+                : 0;
+
+
+        const time =
+            new Date();
+
+
+        time.setHours(
+            hour,
+            minute,
+            0,
+            0
+        );
+
+
+        // Wenn die Uhrzeit heute schon vorbei ist,
+        // wird die Erinnerung für morgen gesetzt.
+
+        if (
+            time.getTime() <= Date.now()
+        ) {
+
+            time.setDate(
+                time.getDate() + 1
+            );
+        }
+
+
+        let reminderText =
+            text;
+
+
+        const anIndex =
+            lower.indexOf("an ");
+
+
+        if (anIndex !== -1) {
+
+            reminderText =
+                text.substring(
+                    anIndex + 3
+                ).trim();
+        }
+
+
+        if (!reminderText) {
+
+            reminderText =
+                "deine Erinnerung";
+        }
+
+
+        saveReminder(
+            reminderText,
+            time.getTime()
+        );
+
+
+        return (
+            "Verstanden. Ich erinnere dich um " +
+            hour +
+            " Uhr an " +
+            reminderText +
+            "."
+        );
+    }
+
+
+    return (
+        "Ich brauche noch eine Zeitangabe. " +
+        "Zum Beispiel: Erinnere mich in 10 Minuten an den Müll."
+    );
+}
+
+
+// ==========================================
 // JARVIS ANTWORTEN
 // ==========================================
 
 function jarvisReply(text) {
 
-    const originalText = text;
-    const lower = text.toLowerCase();
+    const originalText =
+        text;
+
+    const lower =
+        text.toLowerCase();
 
 
     // ==========================================
@@ -80,66 +253,103 @@ function jarvisReply(text) {
         lower.includes("öffne youtube") ||
         lower.includes("starte youtube")
     ) {
-        openApp("https://youtube.com");
+
+        openApp(
+            "https://youtube.com"
+        );
+
         return "Ich öffne YouTube.";
     }
+
 
     if (
         lower.includes("öffne whatsapp") ||
         lower.includes("starte whatsapp")
     ) {
-        openApp("https://wa.me/");
+
+        openApp(
+            "https://wa.me/"
+        );
+
         return "Ich öffne WhatsApp.";
     }
+
 
     if (
         lower.includes("öffne spotify") ||
         lower.includes("starte spotify")
     ) {
-        openApp("https://open.spotify.com");
+
+        openApp(
+            "https://open.spotify.com"
+        );
+
         return "Ich öffne Spotify.";
     }
+
 
     if (
         lower.includes("öffne instagram") ||
         lower.includes("starte instagram")
     ) {
-        openApp("https://instagram.com");
+
+        openApp(
+            "https://instagram.com"
+        );
+
         return "Ich öffne Instagram.";
     }
+
 
     if (
         lower.includes("öffne tiktok") ||
         lower.includes("starte tiktok")
     ) {
-        openApp("https://tiktok.com");
+
+        openApp(
+            "https://tiktok.com"
+        );
+
         return "Ich öffne TikTok.";
     }
 
 
     // ==========================================
-    // NAME SPEICHERN
+    // NAMEN SPEICHERN
     // ==========================================
 
-    if (lower.includes("mein name ist ")) {
+    if (
+        lower.includes("mein name ist ")
+    ) {
 
         const start =
             lower.indexOf("mein name ist ") + 14;
 
+
         const name =
-            originalText.substring(start).trim();
+            originalText
+                .substring(start)
+                .trim();
+
 
         if (name) {
 
-            saveMemory("name", name);
+            saveMemory(
+                "name",
+                name
+            );
 
-            return "Verstanden. Ich werde mir deinen Namen merken.";
+
+            return (
+                "Verstanden. " +
+                "Ich werde mir deinen Namen merken."
+            );
         }
     }
 
 
     // ==========================================
-    // NAME ABRUFEN
+    // NAMEN ABRUFEN
     // ==========================================
 
     if (
@@ -147,25 +357,42 @@ function jarvisReply(text) {
         lower.includes("kennst du meinen namen")
     ) {
 
-        const name = getMemory("name");
+        const name =
+            getMemory("name");
+
 
         if (name) {
-            return "Du heißt " + name + ".";
+
+            return (
+                "Du heißt " +
+                name +
+                "."
+            );
         }
 
-        return "Du hast mir deinen Namen noch nicht gesagt.";
+
+        return (
+            "Du hast mir deinen Namen " +
+            "noch nicht gesagt."
+        );
     }
 
 
     // ==========================================
-    // NAME VERGESSEN
+    // NAMEN VERGESSEN
     // ==========================================
 
-    if (lower.includes("vergiss meinen namen")) {
+    if (
+        lower.includes("vergiss meinen namen")
+    ) {
 
         deleteMemory("name");
 
-        return "Verstanden. Ich habe deinen Namen vergessen.";
+
+        return (
+            "Verstanden. " +
+            "Ich habe deinen Namen vergessen."
+        );
     }
 
 
@@ -179,37 +406,55 @@ function jarvisReply(text) {
         lower.includes("hey")
     ) {
 
-        const name = getMemory("name");
+        const name =
+            getMemory("name");
+
 
         if (name) {
-            return "Hallo " + name + ".";
+
+            return (
+                "Hallo " +
+                name +
+                "."
+            );
         }
 
-        return "Hallo. Ich bin JARVIS.";
+
+        return (
+            "Hallo. " +
+            "Ich bin JARVIS."
+        );
     }
 
 
     // ==========================================
-    // JARVIS
+    // WER BIST DU?
     // ==========================================
 
     if (
         lower.includes("wie heißt du") ||
         lower.includes("wer bist du")
     ) {
-        return "Ich bin JARVIS, dein persönlicher Assistent.";
+
+        return (
+            "Ich bin JARVIS, " +
+            "dein persönlicher Assistent."
+        );
     }
 
 
     // ==========================================
-    // BEFINDEN
+    // WIE GEHT ES DIR?
     // ==========================================
 
     if (
         lower.includes("wie geht es dir") ||
         lower.includes("wie geht's dir")
     ) {
-        return "Alle Systeme funktionieren einwandfrei.";
+
+        return (
+            "Alle Systeme funktionieren einwandfrei."
+        );
     }
 
 
@@ -223,13 +468,29 @@ function jarvisReply(text) {
         lower.includes("uhrzeit")
     ) {
 
-        const jetzt = new Date();
+        const jetzt =
+            new Date();
 
-        return "Es ist " +
-            String(jetzt.getHours()).padStart(2, "0") +
+
+        const stunden =
+            String(
+                jetzt.getHours()
+            ).padStart(2, "0");
+
+
+        const minuten =
+            String(
+                jetzt.getMinutes()
+            ).padStart(2, "0");
+
+
+        return (
+            "Es ist " +
+            stunden +
             " Uhr " +
-            String(jetzt.getMinutes()).padStart(2, "0") +
-            ".";
+            minuten +
+            "."
+        );
     }
 
 
@@ -242,9 +503,13 @@ function jarvisReply(text) {
         lower.includes("welcher tag ist heute")
     ) {
 
-        return "Heute ist der " +
-            new Date().toLocaleDateString("de-DE") +
-            ".";
+        return (
+            "Heute ist der " +
+            new Date().toLocaleDateString(
+                "de-DE"
+            ) +
+            "."
+        );
     }
 
 
@@ -256,6 +521,7 @@ function jarvisReply(text) {
         lower.includes("danke") ||
         lower.includes("dankeschön")
     ) {
+
         return "Gerne.";
     }
 
@@ -268,6 +534,7 @@ function jarvisReply(text) {
         lower.includes("tschüss") ||
         lower.includes("auf wiedersehen")
     ) {
+
         return "Auf Wiedersehen.";
     }
 
@@ -276,30 +543,46 @@ function jarvisReply(text) {
     // STANDARD
     // ==========================================
 
-    return "Diese Funktion muss ich noch lernen.";
+    return (
+        "Diese Funktion muss ich noch lernen."
+    );
 }
 
 
 // ==========================================
-// NACHRICHT HINZUFÜGEN
+// CHAT NACHRICHT HINZUFÜGEN
 // ==========================================
 
-function addMessage(text, type) {
+function addMessage(
+    text,
+    type
+) {
 
     const chat =
         document.getElementById("chat");
 
-    if (!chat) return;
+
+    if (!chat) {
+        return;
+    }
+
 
     const message =
         document.createElement("div");
 
+
     message.className =
         "message " + type;
 
-    message.textContent = text;
 
-    chat.appendChild(message);
+    message.textContent =
+        text;
+
+
+    chat.appendChild(
+        message
+    );
+
 
     chat.scrollTop =
         chat.scrollHeight;
@@ -313,29 +596,197 @@ function addMessage(text, type) {
 async function sendText() {
 
     const input =
-        document.getElementById("userInput");
+        document.getElementById(
+            "userInput"
+        );
 
-    if (!input) return;
+
+    if (!input) {
+        return;
+    }
+
 
     const text =
         input.value.trim();
 
-    if (!text) return;
+
+    if (!text) {
+        return;
+    }
 
 
-    // Deine Nachricht anzeigen
+    // ==========================================
+    // DEINE NACHRICHT
+    // ==========================================
+
     addMessage(
         "Du: " + text,
         "user-message"
     );
 
 
-    // Eingabefeld leeren
     input.value = "";
 
 
+    const lower =
+        text.toLowerCase();
+
+
     // ==========================================
-    // WETTER PRÜFEN
+    // ERINNERUNG
+    // ==========================================
+
+    if (
+        lower.includes("erinnere mich") ||
+        lower.includes("erinner mich")
+    ) {
+
+        if (
+            typeof saveReminder !==
+            "function"
+        ) {
+
+            const error =
+                "Das Erinnerungssystem ist nicht geladen.";
+
+            addMessage(
+                "JARVIS: " + error,
+                "jarvis-message"
+            );
+
+            speak(error);
+
+            return;
+        }
+
+
+        const answer =
+            createReminderFromText(
+                text
+            );
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        speak(answer);
+
+
+        if (
+            typeof enableNotifications ===
+            "function"
+        ) {
+
+            enableNotifications();
+        }
+
+
+        return;
+    }
+
+
+    // ==========================================
+    // ERINNERUNGEN ANZEIGEN
+    // ==========================================
+
+    if (
+        lower.includes("meine erinnerungen") ||
+        lower.includes("welche erinnerungen") ||
+        lower.includes("meine termine")
+    ) {
+
+        if (
+            typeof getReminders ===
+            "function"
+        ) {
+
+            const answer =
+                getReminders();
+
+
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+
+            speak(answer);
+
+        } else {
+
+            const answer =
+                "Das Erinnerungssystem ist nicht geladen.";
+
+
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+
+            speak(answer);
+        }
+
+
+        return;
+    }
+
+
+    // ==========================================
+    // ERINNERUNGEN LÖSCHEN
+    // ==========================================
+
+    if (
+        lower.includes(
+            "lösche alle erinnerungen"
+        ) ||
+        lower.includes(
+            "vergiss alle erinnerungen"
+        )
+    ) {
+
+        if (
+            typeof clearReminders ===
+            "function"
+        ) {
+
+            const answer =
+                clearReminders();
+
+
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+
+            speak(answer);
+
+        } else {
+
+            const answer =
+                "Das Erinnerungssystem ist nicht geladen.";
+
+
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+
+            speak(answer);
+        }
+
+
+        return;
+    }
+
+
+    // ==========================================
+    // WETTER
     // ==========================================
 
     const weatherCity =
@@ -345,28 +796,57 @@ async function sendText() {
     if (weatherCity) {
 
         const loadingText =
-            "Einen Moment. Ich rufe die Wetterdaten für " +
+            "Einen Moment. " +
+            "Ich rufe die Wetterdaten für " +
             weatherCity +
             " ab.";
+
 
         addMessage(
             "JARVIS: " + loadingText,
             "jarvis-message"
         );
 
-        speak(loadingText);
+
+        speak(
+            loadingText
+        );
+
+
+        if (
+            typeof getWeather !==
+            "function"
+        ) {
+
+            const errorText =
+                "Das Wettersystem ist nicht geladen.";
+
+
+            addMessage(
+                "JARVIS: " + errorText,
+                "jarvis-message"
+            );
+
+
+            speak(errorText);
+
+            return;
+        }
 
 
         try {
 
             const answer =
-                await getWeather(weatherCity);
+                await getWeather(
+                    weatherCity
+                );
 
 
             addMessage(
                 "JARVIS: " + answer,
                 "jarvis-message"
             );
+
 
             speak(answer);
 
@@ -378,23 +858,28 @@ async function sendText() {
                 error
             );
 
+
             const errorText =
-                "Ich konnte die Wetterdaten gerade nicht abrufen.";
+                "Ich konnte die Wetterdaten " +
+                "gerade nicht abrufen.";
+
 
             addMessage(
                 "JARVIS: " + errorText,
                 "jarvis-message"
             );
 
+
             speak(errorText);
         }
+
 
         return;
     }
 
 
     // ==========================================
-    // NORMALE ANTWORT
+    // NORMALE JARVIS ANTWORT
     // ==========================================
 
     const answer =
@@ -407,7 +892,11 @@ async function sendText() {
     );
 
 
-    if (typeof speak === "function") {
+    if (
+        typeof speak ===
+        "function"
+    ) {
+
         speak(answer);
     }
 }
