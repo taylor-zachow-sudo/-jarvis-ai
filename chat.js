@@ -1,9 +1,61 @@
+```javascript
 // ==========================================
 // APPS ÖFFNEN
 // ==========================================
 
 function openApp(url) {
     window.location.href = url;
+}
+
+
+// ==========================================
+// WETTER FRAGE ERKENNEN
+// ==========================================
+
+function lowerCaseWeather(text) {
+
+    const lower = text.toLowerCase();
+
+    const isWeather =
+        lower.includes("wetter") ||
+        lower.includes("temperatur") ||
+        lower.includes("wie warm") ||
+        lower.includes("wie kalt") ||
+        lower.includes("regnet es");
+
+    if (!isWeather) {
+        return null;
+    }
+
+    const patterns = [
+        "wetter in ",
+        "wetter für ",
+        "wetter von ",
+        "temperatur in ",
+        "temperatur für ",
+        "wie warm ist es in ",
+        "wie kalt ist es in ",
+        "regnet es in "
+    ];
+
+    for (const pattern of patterns) {
+
+        if (lower.includes(pattern)) {
+
+            const start =
+                lower.indexOf(pattern) + pattern.length;
+
+            const city =
+                text.substring(start).trim();
+
+            if (city) {
+                return city;
+            }
+        }
+    }
+
+    // Wenn keine Stadt genannt wurde
+    return "Berlin";
 }
 
 
@@ -75,7 +127,9 @@ function jarvisReply(text) {
             originalText.substring(start).trim();
 
         if (name) {
+
             saveMemory("name", name);
+
             return "Verstanden. Ich werde mir deinen Namen merken.";
         }
     }
@@ -140,6 +194,7 @@ function jarvisReply(text) {
         lower.includes("wie heißt du") ||
         lower.includes("wer bist du")
     ) {
+
         return "Ich bin JARVIS, dein persönlicher Assistent.";
     }
 
@@ -152,6 +207,7 @@ function jarvisReply(text) {
         lower.includes("wie geht es dir") ||
         lower.includes("wie geht's dir")
     ) {
+
         return "Alle Systeme funktionieren einwandfrei.";
     }
 
@@ -205,6 +261,7 @@ function jarvisReply(text) {
         lower.includes("danke") ||
         lower.includes("dankeschön")
     ) {
+
         return "Gerne.";
     }
 
@@ -217,6 +274,7 @@ function jarvisReply(text) {
         lower.includes("tschüss") ||
         lower.includes("auf wiedersehen")
     ) {
+
         return "Auf Wiedersehen.";
     }
 
@@ -227,7 +285,6 @@ function jarvisReply(text) {
 
     return "Diese Funktion muss ich noch lernen.";
 }
-
 
 
 // ==========================================
@@ -247,14 +304,14 @@ function addMessage(text, type) {
     message.className =
         "message " + type;
 
-    message.textContent = text;
+    message.textContent =
+        text;
 
     chat.appendChild(message);
 
     chat.scrollTop =
         chat.scrollHeight;
 }
-
 
 
 // ==========================================
@@ -281,24 +338,80 @@ function sendText() {
     );
 
 
-    // Eingabe löschen
+    // Eingabefeld leeren
     input.value = "";
 
 
-    // JARVIS Antwort
+    // ==========================================
+    // WETTER
+    // ==========================================
+
+    const weatherRequest =
+        lowerCaseWeather(text);
+
+
+    if (weatherRequest) {
+
+        const loadingMessage =
+            "Einen Moment, ich rufe die Wetterdaten ab.";
+
+        addMessage(
+            "JARVIS: " + loadingMessage,
+            "jarvis-message"
+        );
+
+        speak(loadingMessage);
+
+
+        getWeather(weatherRequest)
+            .then(function(answer) {
+
+                addMessage(
+                    "JARVIS: " + answer,
+                    "jarvis-message"
+                );
+
+                speak(answer);
+
+            })
+            .catch(function(error) {
+
+                console.error(
+                    "Wetterfehler:",
+                    error
+                );
+
+                const errorMessage =
+                    "Ich konnte die Wetterdaten gerade nicht abrufen.";
+
+                addMessage(
+                    "JARVIS: " + errorMessage,
+                    "jarvis-message"
+                );
+
+                speak(errorMessage);
+            });
+
+        return;
+    }
+
+
+    // ==========================================
+    // NORMALE JARVIS ANTWORT
+    // ==========================================
+
     const answer =
         jarvisReply(text);
 
 
-    // Antwort anzeigen
     addMessage(
         "JARVIS: " + answer,
         "jarvis-message"
     );
 
 
-    // Antwort sprechen
     if (typeof speak === "function") {
         speak(answer);
     }
 }
+```
