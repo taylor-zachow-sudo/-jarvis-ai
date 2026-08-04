@@ -1,19 +1,63 @@
 function jarvisReply(text) {
-    text = text.toLowerCase();
 
-    if (text.includes("hallo") || text.includes("hi")) {
+    const originalText = text;
+    const lower = text.toLowerCase();
+
+    // Namen speichern
+    if (lower.includes("mein name ist ")) {
+
+        const start = lower.indexOf("mein name ist ") + 14;
+        const name = originalText.substring(start).trim();
+
+        if (name) {
+            saveMemory("name", name);
+            return "Verstanden. Ich werde mir deinen Namen merken.";
+        }
+    }
+
+    // Namen abrufen
+    if (
+        lower.includes("wie heiße ich") ||
+        lower.includes("kennst du meinen namen")
+    ) {
+
+        const name = getMemory("name");
+
+        if (name) {
+            return "Du heißt " + name + ".";
+        }
+
+        return "Du hast mir deinen Namen noch nicht gesagt.";
+    }
+
+    // Namen vergessen
+    if (lower.includes("vergiss meinen namen")) {
+        deleteMemory("name");
+        return "Verstanden. Ich habe deinen Namen vergessen.";
+    }
+
+    // Begrüßung
+    if (lower.includes("hallo") || lower.includes("hi")) {
+
+        const name = getMemory("name");
+
+        if (name) {
+            return "Hallo " + name + ".";
+        }
+
         return "Hallo. Ich bin JARVIS.";
     }
 
-    if (text.includes("wie heißt du")) {
+    if (lower.includes("wie heißt du")) {
         return "Ich bin JARVIS, dein persönlicher Assistent.";
     }
 
-    if (text.includes("wie geht es dir")) {
+    if (lower.includes("wie geht es dir")) {
         return "Alle Systeme funktionieren einwandfrei.";
     }
 
-    if (text.includes("wie spät") || text.includes("uhr")) {
+    if (lower.includes("wie spät") || lower.includes("uhr")) {
+
         const jetzt = new Date();
 
         return "Es ist " +
@@ -23,21 +67,22 @@ function jarvisReply(text) {
             ".";
     }
 
-    if (text.includes("datum")) {
+    if (lower.includes("datum")) {
         return "Heute ist der " +
             new Date().toLocaleDateString("de-DE") +
             ".";
     }
 
-    if (text.includes("danke")) {
+    if (lower.includes("danke")) {
         return "Gerne.";
     }
 
-    return "Das muss ich noch lernen.";
+    return "Diese Funktion muss ich noch lernen.";
 }
 
 
 function addMessage(text, type) {
+
     const chat = document.getElementById("chat");
 
     if (!chat) return;
@@ -53,13 +98,14 @@ function addMessage(text, type) {
 
 
 function sendText() {
+
     const input = document.getElementById("userInput");
 
     if (!input) return;
 
     const text = input.value.trim();
 
-    if (text === "") return;
+    if (!text) return;
 
     addMessage("Du: " + text, "user-message");
 
@@ -69,7 +115,5 @@ function sendText() {
 
     addMessage("JARVIS: " + answer, "jarvis-message");
 
-    if (typeof speak === "function") {
-        speak(answer);
-    }
+    speak(answer);
 }
