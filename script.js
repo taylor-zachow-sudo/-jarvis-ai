@@ -1,50 +1,65 @@
 const status = document.getElementById("status");
 
 function speak(text) {
-    status.innerHTML = "JARVIS: " + text;
 
-    if (!("speechSynthesis" in window)) {
-        console.log("Sprachausgabe wird nicht unterstützt.");
+    console.log("JARVIS soll sprechen:", text);
+
+    if (status) {
+        status.innerHTML = "🔊 JARVIS: " + text;
+    }
+
+    if (!window.speechSynthesis) {
+        alert("Dein Browser unterstützt keine Sprachausgabe.");
         return;
     }
 
+    // Alte Sprache stoppen
     window.speechSynthesis.cancel();
 
     const msg = new SpeechSynthesisUtterance(text);
 
-    // JARVIS-Stimme
-    msg.rate = 0.78;
-    msg.pitch = 0.45;
-    msg.volume = 1;
     msg.lang = "de-DE";
+    msg.rate = 0.85;
+    msg.pitch = 0.6;
+    msg.volume = 1;
 
     const voices = window.speechSynthesis.getVoices();
 
-    // Deutsche Stimme suchen
-    const voice =
-        voices.find(v =>
-            v.lang && v.lang.toLowerCase() === "de-de"
-        ) ||
-        voices.find(v =>
-            v.lang && v.lang.toLowerCase().startsWith("de")
-        );
+    console.log("Gefundene Stimmen:", voices);
 
-    if (voice) {
-        msg.voice = voice;
-        msg.lang = voice.lang;
+    const germanVoice =
+        voices.find(v => v.lang === "de-DE") ||
+        voices.find(v => v.lang.startsWith("de"));
+
+    if (germanVoice) {
+        msg.voice = germanVoice;
+        console.log("Verwendete Stimme:", germanVoice.name);
     }
+
+    msg.onstart = function() {
+        console.log("JARVIS beginnt zu sprechen");
+    };
+
+    msg.onend = function() {
+        console.log("JARVIS ist fertig");
+    };
+
+    msg.onerror = function(event) {
+        console.error("Sprachfehler:", event);
+        status.innerHTML = "❌ Sprachfehler";
+    };
 
     window.speechSynthesis.speak(msg);
 }
 
 
-// Stimmen laden
+// Stimmen nachladen
 window.speechSynthesis.onvoiceschanged = function() {
     window.speechSynthesis.getVoices();
 };
 
 
-// Sprachsteuerung
+// Mikrofon
 function startJarvis() {
 
     const Recognition =
@@ -74,22 +89,13 @@ function startJarvis() {
 
         if (input) {
             input.value = text;
-
-            if (typeof sendText === "function") {
-                sendText();
-            } else {
-                console.error("sendText() wurde nicht gefunden.");
-            }
+            sendText();
         }
     };
 
     recognition.onerror = function(event) {
         status.innerHTML = "Mikrofonfehler: " + event.error;
-        console.error("Speech Recognition Fehler:", event.error);
-    };
-
-    recognition.onend = function() {
-        console.log("Spracherkennung beendet.");
+        console.error("Mikrofonfehler:", event.error);
     };
 
     recognition.start();
