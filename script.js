@@ -1,25 +1,43 @@
 const status = document.getElementById("status");
 
+
 function speak(text) {
 
     status.innerHTML = "JARVIS: " + text;
 
-    if (!("speechSynthesis" in window)) {
+    if (!window.speechSynthesis) {
         alert("Dein Browser unterstützt keine Sprachausgabe.");
         return;
     }
 
-    speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 
     const msg = new SpeechSynthesisUtterance(text);
 
     msg.lang = "de-DE";
     msg.rate = 0.85;
-    msg.pitch = 0.65;
+    msg.pitch = 0.7;
     msg.volume = 1;
 
-    speechSynthesis.speak(msg);
+    // Stimmen laden
+    let voices = window.speechSynthesis.getVoices();
+
+    let voice = voices.find(function(v) {
+        return v.lang && v.lang.toLowerCase().startsWith("de");
+    });
+
+    if (voice) {
+        msg.voice = voice;
+    }
+
+    window.speechSynthesis.speak(msg);
 }
+
+
+// iPhone/Safari lädt Stimmen manchmal erst später
+window.speechSynthesis.onvoiceschanged = function() {
+    window.speechSynthesis.getVoices();
+};
 
 
 function startJarvis() {
@@ -42,23 +60,30 @@ function startJarvis() {
 
     recognition.onresult = function(event) {
 
-        const text = event.results[0][0].transcript;
+        const text =
+            event.results[0][0].transcript;
 
         status.innerHTML = "Du: " + text;
 
-        if (typeof sendText === "function") {
+        const input =
+            document.getElementById("userInput");
 
-            const input = document.getElementById("userInput");
+        if (input) {
 
-            if (input) {
-                input.value = text;
-                sendText();
-            }
+            input.value = text;
+
+            sendText();
 
         } else {
 
-            answer(text);
+            const answer = jarvisReply(text);
 
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+            speak(answer);
         }
     };
 }
