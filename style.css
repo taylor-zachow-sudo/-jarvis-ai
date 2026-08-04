@@ -47,3 +47,51 @@ button{
     background:#00d9ff;
     cursor:pointer;
 }
+#chat {
+    width: 320px;
+    height: 180px;
+    margin: 20px auto;
+    padding: 10px;
+    overflow-y: auto;
+    border: 1px solid #00d9ff;
+    border-radius: 15px;
+    background: rgba(0, 20, 35, 0.7);
+    box-shadow: 0 0 15px #00d9ff;
+    text-align: left;
+}
+
+.message {
+    padding: 8px;
+    margin: 6px 0;
+    border-radius: 8px;
+}
+
+.user-message {
+    color: white;
+    text-align: right;
+}
+
+.jarvis-message {
+    color: #00d9ff;
+}
+
+.input-area {
+    display: flex;
+    width: 340px;
+    margin: auto;
+}
+
+#userInput {
+    flex: 1;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #00d9ff;
+    background: #06121f;
+    color: white;
+    outline: none;
+}
+
+.input-area button {
+    margin: 0 0 0 8px;
+    padding: 10px 15px;
+}
