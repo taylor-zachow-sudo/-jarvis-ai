@@ -3,7 +3,8 @@ const status = document.getElementById("status");
 function speak(text) {
     status.innerHTML = "JARVIS: " + text;
 
-    if (!window.speechSynthesis) {
+    if (!("speechSynthesis" in window)) {
+        console.log("Sprachausgabe wird nicht unterstützt.");
         return;
     }
 
@@ -11,39 +12,39 @@ function speak(text) {
 
     const msg = new SpeechSynthesisUtterance(text);
 
-    msg.lang = "de-DE";
-    msg.rate = 0.85;
-    msg.pitch = 0.7;
+    // JARVIS-Stimme
+    msg.rate = 0.78;
+    msg.pitch = 0.45;
     msg.volume = 1;
+    msg.lang = "de-DE";
 
-    window.speechSynthesis.speak(msg);
-}
+    const voices = window.speechSynthesis.getVoices();
 
-    msg.lang = voice ? voice.lang : "en-GB";
-
-    window.speechSynthesis.speak(msg);
-}
+    // Deutsche Stimme suchen
     const voice =
         voices.find(v =>
-            v.name.toLowerCase().includes("daniel")
+            v.lang && v.lang.toLowerCase() === "de-de"
         ) ||
         voices.find(v =>
-            v.lang && v.lang.toLowerCase() === "en-gb"
-        ) ||
-        voices.find(v =>
-            v.lang && v.lang.toLowerCase().startsWith("en")
+            v.lang && v.lang.toLowerCase().startsWith("de")
         );
 
     if (voice) {
         msg.voice = voice;
+        msg.lang = voice.lang;
     }
 
-    msg.lang = voice ? voice.lang : "en-GB";
-
     window.speechSynthesis.speak(msg);
-}v
+}
 
 
+// Stimmen laden
+window.speechSynthesis.onvoiceschanged = function() {
+    window.speechSynthesis.getVoices();
+};
+
+
+// Sprachsteuerung
 function startJarvis() {
 
     const Recognition =
@@ -73,12 +74,22 @@ function startJarvis() {
 
         if (input) {
             input.value = text;
-            sendText();
+
+            if (typeof sendText === "function") {
+                sendText();
+            } else {
+                console.error("sendText() wurde nicht gefunden.");
+            }
         }
     };
 
     recognition.onerror = function(event) {
         status.innerHTML = "Mikrofonfehler: " + event.error;
+        console.error("Speech Recognition Fehler:", event.error);
+    };
+
+    recognition.onend = function() {
+        console.log("Spracherkennung beendet.");
     };
 
     recognition.start();
