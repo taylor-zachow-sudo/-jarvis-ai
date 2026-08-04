@@ -1,7 +1,5 @@
 const status = document.getElementById("status");
 
-let recognition = null;
-
 function speak(text) {
     status.innerHTML = "JARVIS: " + text;
 
@@ -27,28 +25,25 @@ function startJarvis() {
         window.webkitSpeechRecognition;
 
     if (!Recognition) {
-        alert("Dein Browser unterstützt keine Spracherkennung.");
+        alert("Spracherkennung wird nicht unterstützt.");
         return;
     }
 
-    recognition = new Recognition();
+    const recognition = new Recognition();
 
     recognition.lang = "de-DE";
     recognition.interimResults = false;
     recognition.continuous = false;
-    recognition.maxAlternatives = 1;
 
-    status.innerHTML = "🎤 JARVIS HÖRT ZU...";
+    recognition.onstart = function() {
+        status.innerHTML = "🎤 JARVIS HÖRT ZU...";
+    };
 
     recognition.onresult = function(event) {
 
-        const text =
-            event.results[0][0].transcript;
+        const text = event.results[0][0].transcript;
 
-        status.innerHTML = "Du: " + text;
-
-        const input =
-            document.getElementById("userInput");
+        const input = document.getElementById("userInput");
 
         if (input) {
             input.value = text;
@@ -57,20 +52,8 @@ function startJarvis() {
     };
 
     recognition.onerror = function(event) {
-
-        console.log("Spracherkennung Fehler:", event.error);
-
-        status.innerHTML =
-            "Mikrofonfehler: " + event.error;
+        status.innerHTML = "Mikrofonfehler: " + event.error;
     };
 
-    recognition.onend = function() {
-        console.log("Spracherkennung beendet");
-    };
-
-    try {
-        recognition.start();
-    } catch (error) {
-        console.log(error);
-    }
+    recognition.start();
 }
