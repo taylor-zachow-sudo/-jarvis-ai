@@ -36,7 +36,7 @@ function speak(text) {
     msg.rate = 0.78;
 
     // Sehr tief
-    msg.pitch = 0.35;
+    msg.pitch = 0.20;
 
     // Maximale Lautstärke
     msg.volume = 1.0;
