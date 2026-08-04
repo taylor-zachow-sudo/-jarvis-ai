@@ -1,108 +1,612 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
 <title>JARVIS AI</title>
 
+
 <style>
-body{
-margin:0;
-background:#050b14;
-font-family:Arial,sans-serif;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-color:#00d9ff;
-overflow:hidden;
+
+/* ==========================================
+   GRUNDLAYOUT
+========================================== */
+
+* {
+    box-sizing: border-box;
 }
 
-.circle{
-width:220px;
-height:220px;
-border-radius:50%;
-border:4px solid #00d9ff;
-box-shadow:0 0 40px #00d9ff;
-animation:pulse 2s infinite;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:30px;
-font-weight:bold;
+body {
+
+    margin: 0;
+
+    background: #050b14;
+
+    font-family: Arial, sans-serif;
+
+    color: #00d9ff;
+
+    height: 100vh;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
 }
 
-@keyframes pulse{
-0%{transform:scale(1);}
-50%{transform:scale(1.08);}
-100%{transform:scale(1);}
+
+/* ==========================================
+   JARVIS KREIS
+========================================== */
+
+.circle {
+
+    width: 220px;
+
+    height: 220px;
+
+    border-radius: 50%;
+
+    border: 4px solid #00d9ff;
+
+    box-shadow:
+        0 0 20px #00d9ff,
+        0 0 40px #00d9ff;
+
+    animation: pulse 2s infinite;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    margin-top: 50px;
+
+    flex-shrink: 0;
 }
 
-#status{
-position:absolute;
-bottom:80px;
-font-size:22px;
+
+@keyframes pulse {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
 }
 
-button{
-position:absolute;
-bottom:20px;
-padding:15px 35px;
-font-size:20px;
-background:#00d9ff;
-border:none;
-border-radius:40px;
-cursor:pointer;
+
+/* ==========================================
+   STATUS
+========================================== */
+
+#status {
+
+    margin-top: 25px;
+
+    font-size: 20px;
+
+    text-align: center;
+
 }
 
-button:hover{
-background:white;
+
+/* ==========================================
+   CHAT
+========================================== */
+
+#chat {
+
+    width: 90%;
+
+    max-width: 600px;
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    margin-top: 20px;
+
+    margin-bottom: 150px;
+
+    padding: 10px;
+
 }
+
+
+/* Nachrichten */
+
+.message {
+
+    padding: 10px 14px;
+
+    margin: 8px 0;
+
+    border-radius: 12px;
+
+    word-wrap: break-word;
+
+}
+
+
+/* Deine Nachrichten */
+
+.user-message {
+
+    background: #10283a;
+
+    text-align: right;
+
+}
+
+
+/* JARVIS Nachrichten */
+
+.jarvis-message {
+
+    background: #071a25;
+
+    text-align: left;
+
+}
+
+
+/* ==========================================
+   EINGABEBEREICH
+========================================== */
+
+.input-area {
+
+    position: fixed;
+
+    bottom: 85px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    max-width: 600px;
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+/* Eingabefeld */
+
+#userInput {
+
+    flex: 1;
+
+    padding: 14px;
+
+    font-size: 17px;
+
+    border-radius: 25px;
+
+    border: 2px solid #00d9ff;
+
+    outline: none;
+
+    background: #08121e;
+
+    color: white;
+
+}
+
+
+/* Senden */
+
+#sendButton {
+
+    position: static;
+
+    width: 55px;
+
+    height: 55px;
+
+    padding: 0;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: #00d9ff;
+
+    color: #050b14;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.control-buttons {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    display: flex;
+
+    gap: 10px;
+
+    justify-content: center;
+
+}
+
+
+.control-button {
+
+    position: static;
+
+    padding: 12px 20px;
+
+    font-size: 16px;
+
+    background: #00d9ff;
+
+    color: #050b14;
+
+    border: none;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+}
+
+
+button:hover {
+
+    background: white;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .circle {
+
+        width: 180px;
+
+        height: 180px;
+
+        font-size: 25px;
+
+        margin-top: 30px;
+
+    }
+
+
+    #status {
+
+        font-size: 17px;
+
+    }
+
+
+    #chat {
+
+        width: 95%;
+
+    }
+
+
+    .input-area {
+
+        bottom: 80px;
+
+    }
+
+
+    .control-buttons {
+
+        bottom: 15px;
+
+    }
+
+}
+
 </style>
 
 </head>
 
+
 <body>
 
+
+<!-- ==========================================
+     JARVIS
+========================================== -->
+
 <div class="circle">
-JARVIS
+    JARVIS
 </div>
+
 
 <div id="status">
-SYSTEM ONLINE
+    SYSTEM ONLINE
 </div>
-<div id="chat"></div>
+
+
+<!-- ==========================================
+     CHAT
+========================================== -->
+
+<div id="chat">
+</div>
+
+
+<!-- ==========================================
+     EINGABE
+========================================== -->
 
 <div class="input-area">
-    <input id="userInput" type="text" placeholder="Nachricht an JARVIS...">
-    <button id="sendButton" type="button">➤</button>
 
-<button onclick="speak('Hallo. Ich bin JARVIS.')">
-🔊 Stimme testen
-</button>
-    
+    <input
+        id="userInput"
+        type="text"
+        placeholder="Nachricht an JARVIS..."
+        autocomplete="off"
+    >
+
+    <button
+        id="sendButton"
+        type="button"
+        aria-label="Nachricht senden"
+    >
+        ➤
+    </button>
+
 </div>
-<button onclick="startJarvis()">
-    🎤 Aktivieren
-</button>
+
+
+<!-- ==========================================
+     STEUERUNG
+========================================== -->
+
+<div class="control-buttons">
+
+    <button
+        id="voiceButton"
+        class="control-button"
+        type="button"
+    >
+        🔊 Stimme testen
+    </button>
+
+
+    <button
+        id="micButton"
+        class="control-button"
+        type="button"
+    >
+        🎤 Aktivieren
+    </button>
+
+</div>
+
+
+<!-- ==========================================
+     JARVIS DATEIEN
+========================================== -->
 
 <script src="memory.js"></script>
-<script src="weather.js"></script>
-<script src="reminders.js"></script>
-<script src="script.js"></script>
-<script src="chat.js"></script>
-    
-<script>
-document.getElementById("sendButton").addEventListener("click", function() {
-    sendText();
-});
 
-document.getElementById("userInput").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        sendText();
+<script src="weather.js"></script>
+
+<script src="reminders.js"></script>
+
+<script src="script.js"></script>
+
+<script src="chat.js"></script>
+
+
+<!-- ==========================================
+     BUTTONEN VERBINDEN
+========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+
+        /* ======================================
+           SENDEN BUTTON
+        ====================================== */
+
+        const sendButton =
+            document.getElementById(
+                "sendButton"
+            );
+
+
+        const userInput =
+            document.getElementById(
+                "userInput"
+            );
+
+
+        if (sendButton) {
+
+            sendButton.addEventListener(
+                "click",
+                function() {
+
+                    if (
+                        typeof sendText ===
+                        "function"
+                    ) {
+
+                        sendText();
+
+                    } else {
+
+                        console.error(
+                            "sendText() wurde nicht gefunden."
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ======================================
+           ENTER TASTE
+        ====================================== */
+
+        if (userInput) {
+
+            userInput.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+
+                        if (
+                            typeof sendText ===
+                            "function"
+                        ) {
+
+                            sendText();
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ======================================
+           STIMME TESTEN
+        ====================================== */
+
+        const voiceButton =
+            document.getElementById(
+                "voiceButton"
+            );
+
+
+        if (voiceButton) {
+
+            voiceButton.addEventListener(
+                "click",
+                function() {
+
+                    if (
+                        typeof speak ===
+                        "function"
+                    ) {
+
+                        speak(
+                            "Hallo. Ich bin JARVIS."
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ======================================
+           MIKROFON
+        ====================================== */
+
+        const micButton =
+            document.getElementById(
+                "micButton"
+            );
+
+
+        if (micButton) {
+
+            micButton.addEventListener(
+                "click",
+                function() {
+
+                    if (
+                        typeof startJarvis ===
+                        "function"
+                    ) {
+
+                        startJarvis();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ======================================
+           EINGABEFELD FOKUS
+        ====================================== */
+
+        if (userInput) {
+
+            userInput.focus();
+
+        }
+
     }
-});
+);
+
 </script>
 
+
 </body>
+
 </html>
+```
