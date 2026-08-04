@@ -1,31 +1,50 @@
+```javascript
 function sendText() {
 
-    const input = document.getElementById("userInput");
+    console.log("SENDTEXT WIRD AUSGEFÜHRT");
 
-    if (!input) {
-        alert("userInput nicht gefunden!");
+    const input = document.getElementById("userInput");
+    const chat = document.getElementById("chat");
+
+    if (!input || !chat) {
+        alert("Eingabefeld oder Chat wurde nicht gefunden.");
         return;
     }
 
     const text = input.value.trim();
 
-    if (!text) {
+    if (text === "") {
         return;
     }
 
-    const chat = document.getElementById("chat");
+    // Deine Nachricht
+    const userMessage = document.createElement("div");
 
-    chat.innerHTML +=
-        '<div class="message user-message">Du: ' +
-        text +
-        '</div>';
+    userMessage.className = "message user-message";
+    userMessage.textContent = "Du: " + text;
 
+    chat.appendChild(userMessage);
+
+    // Eingabe löschen
     input.value = "";
 
-    chat.innerHTML +=
-        '<div class="message jarvis-message">JARVIS: Hallo. Ich funktioniere wieder.</div>';
+    // JARVIS Antwort
+    const jarvisMessage = document.createElement("div");
 
+    jarvisMessage.className = "message jarvis-message";
+    jarvisMessage.textContent =
+        "JARVIS: Hallo. Ich kann dich wieder hören.";
+
+    chat.appendChild(jarvisMessage);
+
+    // Nach unten scrollen
     chat.scrollTop = chat.scrollHeight;
 
-    console.log("sendText funktioniert!");
+    // Stimme
+    if (typeof speak === "function") {
+        speak("Hallo. Ich kann dich wieder hören.");
+    }
 }
+
+console.log("CHAT.JS ERFOLGREICH GELADEN");
+```
