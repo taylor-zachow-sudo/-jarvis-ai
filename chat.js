@@ -1,7 +1,47 @@
 function jarvisReply(text) {
+
+    const originalText = text;
     text = text.toLowerCase();
 
+    // Namen speichern
+    if (text.includes("mein name ist ")) {
+
+        const name = originalText
+            .substring(originalText.toLowerCase().indexOf("mein name ist ") + 13)
+            .trim();
+
+        if (name) {
+            saveMemory("name", name);
+            return "Verstanden. Ich werde mir deinen Namen merken.";
+        }
+    }
+
+    // Namen abrufen
+    if (
+        text.includes("wie heiße ich") ||
+        text.includes("kennst du meinen namen")
+    ) {
+        const name = getMemory("name");
+
+        if (name) {
+            return "Du heißt " + name + ".";
+        }
+
+        return "Du hast mir deinen Namen noch nicht gesagt.";
+    }
+
+    if (text.includes("vergiss meinen namen")) {
+        deleteMemory("name");
+        return "Verstanden. Ich habe deinen Namen vergessen.";
+    }
+
     if (text.includes("hallo") || text.includes("hi")) {
+        const name = getMemory("name");
+
+        if (name) {
+            return "Hallo " + name + ".";
+        }
+
         return "Hallo. Ich bin JARVIS.";
     }
 
@@ -10,14 +50,11 @@ function jarvisReply(text) {
     }
 
     if (text.includes("wie geht es dir")) {
-        return "Mir geht es ausgezeichnet. Alle Systeme sind online.";
-    }
-
-    if (text.includes("wer bist du")) {
-        return "Ich bin JARVIS. Deine persönliche KI.";
+        return "Alle Systeme funktionieren einwandfrei.";
     }
 
     if (text.includes("wie spät") || text.includes("uhr")) {
+
         const jetzt = new Date();
 
         return "Es ist " +
@@ -37,7 +74,7 @@ function jarvisReply(text) {
         return "Gerne.";
     }
 
-    return "Das habe ich verstanden. Diese Funktion lerne ich noch.";
+    return "Diese Funktion muss ich noch lernen.";
 }
 
 
@@ -50,7 +87,6 @@ function addMessage(text, type) {
     const message = document.createElement("div");
 
     message.className = "message " + type;
-
     message.textContent = text;
 
     chat.appendChild(message);
