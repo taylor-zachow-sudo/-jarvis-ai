@@ -1,11 +1,11 @@
-alert("Neue Version geladen");
-
 const status = document.getElementById("status");
 
 function speak(text) {
+
     status.innerHTML = "JARVIS: " + text;
 
     if (!("speechSynthesis" in window)) {
+        alert("Dein Browser unterstützt keine Sprachausgabe.");
         return;
     }
 
@@ -18,79 +18,47 @@ function speak(text) {
     msg.pitch = 0.65;
     msg.volume = 1;
 
-    const voices = speechSynthesis.getVoices();
-
-    const germanVoice = voices.find(voice =>
-        voice.lang.toLowerCase().startsWith("de")
-    );
-
-    if (germanVoice) {
-        msg.voice = germanVoice;
-    }
-
     speechSynthesis.speak(msg);
 }
-}
 
-function answer(text){
 
-    text = text.toLowerCase();
+function startJarvis() {
 
-    if(text.includes("hallo") || text.includes("hi")){
-        speak("Hallo. Schön dich wieder zu sehen.");
-    }
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-    else if(text.includes("wie heißt du")){
-        speak("Ich bin Jarvis.");
-    }
-
-    else if(text.includes("wie spät")){
-        const now = new Date();
-
-        speak("Es ist " + now.getHours() + " Uhr " + now.getMinutes());
-    }
-
-    else if(text.includes("welcher tag")){
-        const tage=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-
-        speak("Heute ist " + tage[new Date().getDay()]);
-    }
-
-    else if(text.includes("danke")){
-        speak("Gern geschehen.");
-    }
-
-    else{
-        speak("Das kann ich in Version Eins leider noch nicht.");
-    }
-
-}
-
-function startJarvis(){
-
-    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if(!Recognition){
+    if (!Recognition) {
         alert("Dein Browser unterstützt keine Spracheingabe.");
         return;
     }
 
     const recognition = new Recognition();
 
-    recognition.lang="de-DE";
+    recognition.lang = "de-DE";
+    recognition.interimResults = false;
 
     recognition.start();
 
-    recognition.onresult=function(event){
+    recognition.onresult = function(event) {
 
         const text = event.results[0][0].transcript;
 
-        status.innerHTML="Du: "+text;
+        status.innerHTML = "Du: " + text;
 
-        sendMessage(text);
+        if (typeof sendText === "function") {
 
+            const input = document.getElementById("userInput");
 
+            if (input) {
+                input.value = text;
+                sendText();
+            }
 
+        } else {
+
+            answer(text);
+
+        }
     };
-
 }
