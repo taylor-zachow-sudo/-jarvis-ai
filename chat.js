@@ -9,24 +9,26 @@ function openApp(url) {
 
 
 // ==========================================
-// WETTER FRAGE ERKENNEN
+// WETTER ERKENNEN
 // ==========================================
 
-function lowerCaseWeather(text) {
+function getWeatherCity(text) {
 
     const lower = text.toLowerCase();
 
+    // Wetter überhaupt gefragt?
     const isWeather =
         lower.includes("wetter") ||
         lower.includes("temperatur") ||
+        lower.includes("regnet es") ||
         lower.includes("wie warm") ||
-        lower.includes("wie kalt") ||
-        lower.includes("regnet es");
+        lower.includes("wie kalt");
 
     if (!isWeather) {
         return null;
     }
 
+    // Stadt aus der Frage holen
     const patterns = [
         "wetter in ",
         "wetter für ",
@@ -40,13 +42,14 @@ function lowerCaseWeather(text) {
 
     for (const pattern of patterns) {
 
-        if (lower.includes(pattern)) {
+        const position = lower.indexOf(pattern);
 
-            const start =
-                lower.indexOf(pattern) + pattern.length;
+        if (position !== -1) {
 
             const city =
-                text.substring(start).trim();
+                text.substring(
+                    position + pattern.length
+                ).trim();
 
             if (city) {
                 return city;
@@ -54,7 +57,7 @@ function lowerCaseWeather(text) {
         }
     }
 
-    // Wenn keine Stadt genannt wurde
+    // Keine Stadt angegeben
     return "Berlin";
 }
 
@@ -115,7 +118,7 @@ function jarvisReply(text) {
 
 
     // ==========================================
-    // NAMEN SPEICHERN
+    // NAME SPEICHERN
     // ==========================================
 
     if (lower.includes("mein name ist ")) {
@@ -136,7 +139,7 @@ function jarvisReply(text) {
 
 
     // ==========================================
-    // NAMEN ABRUFEN
+    // NAME ABRUFEN
     // ==========================================
 
     if (
@@ -155,7 +158,7 @@ function jarvisReply(text) {
 
 
     // ==========================================
-    // NAMEN VERGESSEN
+    // NAME VERGESSEN
     // ==========================================
 
     if (lower.includes("vergiss meinen namen")) {
@@ -187,27 +190,25 @@ function jarvisReply(text) {
 
 
     // ==========================================
-    // WER BIST DU?
+    // JARVIS
     // ==========================================
 
     if (
         lower.includes("wie heißt du") ||
         lower.includes("wer bist du")
     ) {
-
         return "Ich bin JARVIS, dein persönlicher Assistent.";
     }
 
 
     // ==========================================
-    // WIE GEHT ES DIR?
+    // BEFINDEN
     // ==========================================
 
     if (
         lower.includes("wie geht es dir") ||
         lower.includes("wie geht's dir")
     ) {
-
         return "Alle Systeme funktionieren einwandfrei.";
     }
 
@@ -224,16 +225,10 @@ function jarvisReply(text) {
 
         const jetzt = new Date();
 
-        const stunden =
-            String(jetzt.getHours()).padStart(2, "0");
-
-        const minuten =
-            String(jetzt.getMinutes()).padStart(2, "0");
-
         return "Es ist " +
-            stunden +
+            String(jetzt.getHours()).padStart(2, "0") +
             " Uhr " +
-            minuten +
+            String(jetzt.getMinutes()).padStart(2, "0") +
             ".";
     }
 
@@ -261,7 +256,6 @@ function jarvisReply(text) {
         lower.includes("danke") ||
         lower.includes("dankeschön")
     ) {
-
         return "Gerne.";
     }
 
@@ -274,7 +268,6 @@ function jarvisReply(text) {
         lower.includes("tschüss") ||
         lower.includes("auf wiedersehen")
     ) {
-
         return "Auf Wiedersehen.";
     }
 
@@ -304,8 +297,7 @@ function addMessage(text, type) {
     message.className =
         "message " + type;
 
-    message.textContent =
-        text;
+    message.textContent = text;
 
     chat.appendChild(message);
 
@@ -318,7 +310,7 @@ function addMessage(text, type) {
 // NACHRICHT SENDEN
 // ==========================================
 
-function sendText() {
+async function sendText() {
 
     const input =
         document.getElementById("userInput");
@@ -331,7 +323,7 @@ function sendText() {
     if (!text) return;
 
 
-    // Deine Nachricht
+    // Deine Nachricht anzeigen
     addMessage(
         "Du: " + text,
         "user-message"
@@ -343,61 +335,66 @@ function sendText() {
 
 
     // ==========================================
-    // WETTER
+    // WETTER PRÜFEN
     // ==========================================
 
-    const weatherRequest =
-        lowerCaseWeather(text);
+    const weatherCity =
+        getWeatherCity(text);
 
 
-    if (weatherRequest) {
+    if (weatherCity) {
 
-        const loadingMessage =
-            "Einen Moment, ich rufe die Wetterdaten ab.";
+        const loadingText =
+            "Einen Moment. Ich rufe die Wetterdaten für " +
+            weatherCity +
+            " ab.";
 
         addMessage(
-            "JARVIS: " + loadingMessage,
+            "JARVIS: " + loadingText,
             "jarvis-message"
         );
 
-        speak(loadingMessage);
+        speak(loadingText);
 
 
-        getWeather(weatherRequest)
-            .then(function(answer) {
+        try {
 
-                addMessage(
-                    "JARVIS: " + answer,
-                    "jarvis-message"
-                );
+            const answer =
+                await getWeather(weatherCity);
 
-                speak(answer);
 
-            })
-            .catch(function(error) {
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
 
-                console.error(
-                    "Wetterfehler:",
-                    error
-                );
+            speak(answer);
 
-                const errorMessage =
-                    "Ich konnte die Wetterdaten gerade nicht abrufen.";
 
-                addMessage(
-                    "JARVIS: " + errorMessage,
-                    "jarvis-message"
-                );
+        } catch (error) {
 
-                speak(errorMessage);
-            });
+            console.error(
+                "Wetterfehler:",
+                error
+            );
+
+            const errorText =
+                "Ich konnte die Wetterdaten gerade nicht abrufen.";
+
+            addMessage(
+                "JARVIS: " + errorText,
+                "jarvis-message"
+            );
+
+            speak(errorText);
+        }
 
         return;
     }
 
 
     // ==========================================
-    // NORMALE JARVIS ANTWORT
+    // NORMALE ANTWORT
     // ==========================================
 
     const answer =
