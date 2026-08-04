@@ -2,18 +2,34 @@ alert("Neue Version geladen");
 
 const status = document.getElementById("status");
 
-function speak(text){
+function speak(text) {
     status.innerHTML = "JARVIS: " + text;
 
-    if("speechSynthesis" in window){
-        speechSynthesis.cancel();
-
-        const msg = new SpeechSynthesisUtterance(text);
-
-        msg.lang = "de-DE";
-
-        speechSynthesis.speak(msg);
+    if (!("speechSynthesis" in window)) {
+        return;
     }
+
+    speechSynthesis.cancel();
+
+    const msg = new SpeechSynthesisUtterance(text);
+
+    msg.lang = "de-DE";
+    msg.rate = 0.85;
+    msg.pitch = 0.65;
+    msg.volume = 1;
+
+    const voices = speechSynthesis.getVoices();
+
+    const germanVoice = voices.find(voice =>
+        voice.lang.toLowerCase().startsWith("de")
+    );
+
+    if (germanVoice) {
+        msg.voice = germanVoice;
+    }
+
+    speechSynthesis.speak(msg);
+}
 }
 
 function answer(text){
