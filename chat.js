@@ -1,19 +1,24 @@
-```javascript
 // ==========================================
-// JARVIS - EINFACHE CHAT VERSION
+// APPS ÖFFNEN
 // ==========================================
 
 function openApp(url) {
     window.location.href = url;
 }
 
+
+// ==========================================
+// JARVIS ANTWORTEN
+// ==========================================
+
 function jarvisReply(text) {
 
     const originalText = text;
     const lower = text.toLowerCase();
 
+
     // ==========================================
-    // APPS ÖFFNEN
+    // APPS
     // ==========================================
 
     if (
@@ -56,6 +61,7 @@ function jarvisReply(text) {
         return "Ich öffne TikTok.";
     }
 
+
     // ==========================================
     // NAMEN SPEICHERN
     // ==========================================
@@ -69,9 +75,7 @@ function jarvisReply(text) {
             originalText.substring(start).trim();
 
         if (name) {
-
             saveMemory("name", name);
-
             return "Verstanden. Ich werde mir deinen Namen merken.";
         }
     }
@@ -136,7 +140,6 @@ function jarvisReply(text) {
         lower.includes("wie heißt du") ||
         lower.includes("wer bist du")
     ) {
-
         return "Ich bin JARVIS, dein persönlicher Assistent.";
     }
 
@@ -149,7 +152,6 @@ function jarvisReply(text) {
         lower.includes("wie geht es dir") ||
         lower.includes("wie geht's dir")
     ) {
-
         return "Alle Systeme funktionieren einwandfrei.";
     }
 
@@ -203,7 +205,6 @@ function jarvisReply(text) {
         lower.includes("danke") ||
         lower.includes("dankeschön")
     ) {
-
         return "Gerne.";
     }
 
@@ -216,13 +217,12 @@ function jarvisReply(text) {
         lower.includes("tschüss") ||
         lower.includes("auf wiedersehen")
     ) {
-
         return "Auf Wiedersehen.";
     }
 
 
     // ==========================================
-    // STANDARDANTWORT
+    // STANDARD
     // ==========================================
 
     return "Diese Funktion muss ich noch lernen.";
@@ -231,7 +231,7 @@ function jarvisReply(text) {
 
 
 // ==========================================
-// NACHRICHT ZUM CHAT HINZUFÜGEN
+// NACHRICHT HINZUFÜGEN
 // ==========================================
 
 function addMessage(text, type) {
@@ -241,7 +241,6 @@ function addMessage(text, type) {
 
     if (!chat) return;
 
-
     const message =
         document.createElement("div");
 
@@ -250,9 +249,7 @@ function addMessage(text, type) {
 
     message.textContent = text;
 
-
     chat.appendChild(message);
-
 
     chat.scrollTop =
         chat.scrollHeight;
@@ -271,46 +268,37 @@ function sendText() {
 
     if (!input) return;
 
-
     const text =
         input.value.trim();
 
     if (!text) return;
 
 
-    // Nachricht von dir anzeigen
+    // Deine Nachricht
     addMessage(
         "Du: " + text,
         "user-message"
     );
 
 
-    // Eingabefeld leeren
+    // Eingabe löschen
     input.value = "";
 
 
-    // JARVIS Antwort erstellen
+    // JARVIS Antwort
     const answer =
         jarvisReply(text);
 
 
-    // JARVIS Antwort anzeigen
+    // Antwort anzeigen
     addMessage(
         "JARVIS: " + answer,
         "jarvis-message"
     );
 
 
-    // JARVIS spricht
+    // Antwort sprechen
     if (typeof speak === "function") {
-
         speak(answer);
-
-    } else {
-
-        console.error(
-            "FEHLER: speak() wurde nicht gefunden."
-        );
     }
 }
-```
