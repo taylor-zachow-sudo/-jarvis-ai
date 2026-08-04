@@ -18,28 +18,22 @@
 }
 
 body {
-
     margin: 0;
-
     background: #050b14;
-
     font-family: Arial, sans-serif;
-
     color: #00d9ff;
-
     height: 100vh;
-
     overflow: hidden;
 
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
 }
 
 
-/* JARVIS */
+/* ==========================================
+   JARVIS KREIS
+========================================== */
 
 .circle {
 
@@ -57,13 +51,10 @@ body {
     animation: pulse 2s infinite;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
 
     font-size: 30px;
-
     font-weight: bold;
 
     margin-top: 30px;
@@ -86,22 +77,27 @@ body {
 }
 
 
-/* STATUS */
+/* ==========================================
+   STATUS
+========================================== */
 
 #status {
 
     margin-top: 15px;
 
     font-size: 18px;
+
+    text-align: center;
 }
 
 
-/* CHAT */
+/* ==========================================
+   CHAT
+========================================== */
 
 #chat {
 
     width: 90%;
-
     max-width: 600px;
 
     height: 45vh;
@@ -152,7 +148,9 @@ body {
 }
 
 
-/* EINGABE */
+/* ==========================================
+   EINGABE
+========================================== */
 
 .input-area {
 
@@ -197,7 +195,6 @@ body {
 #sendButton {
 
     width: 55px;
-
     height: 55px;
 
     border-radius: 50%;
@@ -215,12 +212,13 @@ body {
 
 
 #sendButton:active {
-
     transform: scale(0.9);
 }
 
 
-/* BUTTONS */
+/* ==========================================
+   BUTTONS
+========================================== */
 
 .control-buttons {
 
@@ -251,6 +249,11 @@ body {
     cursor: pointer;
 }
 
+
+button:hover {
+    background: white;
+}
+
 </style>
 
 </head>
@@ -259,19 +262,30 @@ body {
 <body>
 
 
+<!-- ==========================================
+     JARVIS
+========================================== -->
+
 <div class="circle">
-JARVIS
+    JARVIS
 </div>
 
 
 <div id="status">
-SYSTEM ONLINE
+    SYSTEM ONLINE
 </div>
 
 
-<div id="chat">
-</div>
+<!-- ==========================================
+     CHAT
+========================================== -->
 
+<div id="chat"></div>
+
+
+<!-- ==========================================
+     EINGABE
+========================================== -->
 
 <div class="input-area">
 
@@ -291,6 +305,10 @@ SYSTEM ONLINE
 
 </div>
 
+
+<!-- ==========================================
+     STEUERUNG
+========================================== -->
 
 <div class="control-buttons">
 
@@ -314,46 +332,216 @@ SYSTEM ONLINE
 
 
 <!-- ==========================================
-     DEINE DATEIEN
+     JARVIS DATEIEN
 ========================================== -->
 
-<script src="memory.js?v=10"></script>
+<script src="memory.js?v=20"></script>
 
-<script src="weather.js?v=10"></script>
+<script src="weather.js?v=20"></script>
 
-<script src="reminders.js?v=10"></script>
+<script src="reminders.js?v=20"></script>
 
-<script src="script.js?v=10"></script>
+<script src="script.js?v=20"></script>
 
-<script src="chat.js?v=10"></script>
+<script src="chat.js?v=20"></script>
 
-
-<!-- ==========================================
-     SICHERER SENDEN-BUTTON
-========================================== -->
 
 <script>
 
-console.log("JARVIS INDEX STARTET");
+/* ==========================================
+   JARVIS START
+========================================== */
 
+console.log("JARVIS wird gestartet...");
+
+
+/* ==========================================
+   NACHRICHT ANZEIGEN
+========================================== */
+
+function addMessage(text, type) {
+
+    const chat =
+        document.getElementById("chat");
+
+    if (!chat) {
+        return;
+    }
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message " + type;
+
+    message.textContent =
+        text;
+
+    chat.appendChild(message);
+
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+
+
+/* ==========================================
+   APP ÖFFNEN
+========================================== */
+
+function openApp(app) {
+
+    let url = "";
+
+
+    if (app === "youtube") {
+
+        url = "https://youtube.com";
+
+    }
+
+
+    else if (app === "whatsapp") {
+
+        url = "whatsapp://";
+
+    }
+
+
+    else if (app === "spotify") {
+
+        url = "spotify://";
+
+    }
+
+
+    else if (app === "instagram") {
+
+        url = "instagram://";
+
+    }
+
+
+    else if (app === "tiktok") {
+
+        url = "tiktok://";
+
+    }
+
+
+    else if (app === "google") {
+
+        url = "https://google.com";
+
+    }
+
+
+    if (url) {
+
+        console.log(
+            "JARVIS öffnet:",
+            app
+        );
+
+        window.location.href = url;
+
+    }
+
+}
+
+
+/* ==========================================
+   APP-BEFEHL ERKENNEN
+========================================== */
+
+function checkAppCommand(text) {
+
+    const lower =
+        text.toLowerCase();
+
+
+    if (
+        lower.includes("öffne youtube") ||
+        lower.includes("starte youtube")
+    ) {
+
+        return "youtube";
+
+    }
+
+
+    if (
+        lower.includes("öffne whatsapp") ||
+        lower.includes("starte whatsapp")
+    ) {
+
+        return "whatsapp";
+
+    }
+
+
+    if (
+        lower.includes("öffne spotify") ||
+        lower.includes("starte spotify")
+    ) {
+
+        return "spotify";
+
+    }
+
+
+    if (
+        lower.includes("öffne instagram") ||
+        lower.includes("starte instagram")
+    ) {
+
+        return "instagram";
+
+    }
+
+
+    if (
+        lower.includes("öffne tiktok") ||
+        lower.includes("starte tiktok")
+    ) {
+
+        return "tiktok";
+
+    }
+
+
+    if (
+        lower.includes("öffne google") ||
+        lower.includes("starte google")
+    ) {
+
+        return "google";
+
+    }
+
+
+    return null;
+}
+
+
+/* ==========================================
+   NACHRICHT SENDEN
+========================================== */
 
 function sendText() {
 
-    console.log("SENDTEXT FUNKTION STARTET");
+    console.log(
+        "JARVIS sendText gestartet."
+    );
 
 
     const input =
         document.getElementById("userInput");
 
 
-    const chat =
-        document.getElementById("chat");
-
-
-    if (!input || !chat) {
+    if (!input) {
 
         alert(
-            "JARVIS: Eingabefeld oder Chat fehlt."
+            "JARVIS: Eingabefeld nicht gefunden."
         );
 
         return;
@@ -370,85 +558,147 @@ function sendText() {
     }
 
 
-    // Deine Nachricht
+    /* ======================================
+       BENUTZER-NACHRICHT
+    ====================================== */
 
-    const userMessage =
-        document.createElement("div");
-
-
-    userMessage.className =
-        "message user-message";
-
-
-    userMessage.textContent =
-        "Du: " + text;
-
-
-    chat.appendChild(
-        userMessage
+    addMessage(
+        "Du: " + text,
+        "user-message"
     );
 
 
-    // Eingabe löschen
-
     input.value = "";
-
-
-    // Einfache Antworten
-
-    let answer =
-        "Diese Funktion muss ich noch lernen.";
 
 
     const lower =
         text.toLowerCase();
 
 
-    if (
-        lower === "hallo" ||
-        lower === "hi" ||
-        lower === "hey"
-    ) {
+    /* ======================================
+       APPS
+    ====================================== */
 
-        answer =
-            "Hallo. Ich bin JARVIS.";
-
-    }
+    const app =
+        checkAppCommand(text);
 
 
-    else if (
-        lower.includes("mein name ist ")
-    ) {
+    if (app) {
 
-        const name =
-            text
-            .substring(
-                lower.indexOf("mein name ist ") + 14
-            )
-            .trim();
+        let appName =
+            app.charAt(0).toUpperCase() +
+            app.slice(1);
+
+
+        const answer =
+            "Ich öffne " +
+            appName +
+            ".";
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
 
 
         if (
-            typeof saveMemory ===
+            typeof speak ===
             "function"
         ) {
 
-            saveMemory(
-                "name",
-                name
-            );
+            speak(answer);
 
         }
 
 
-        answer =
-            "Verstanden. Ich werde mir deinen Namen merken.";
+        /*
+         * Kleine Verzögerung,
+         * damit JARVIS die Antwort
+         * noch anzeigen kann.
+         */
+
+        setTimeout(
+            function() {
+
+                openApp(app);
+
+            },
+            500
+        );
+
+
+        return;
+    }
+
+
+    /* ======================================
+       NAME SPEICHERN
+    ====================================== */
+
+    if (
+        lower.includes("mein name ist ")
+    ) {
+
+        const position =
+            lower.indexOf("mein name ist ");
+
+
+        const name =
+            text.substring(
+                position + 14
+            ).trim();
+
+
+        if (name) {
+
+            if (
+                typeof saveMemory ===
+                "function"
+            ) {
+
+                saveMemory(
+                    "name",
+                    name
+                );
+
+            }
+
+
+            const answer =
+                "Verstanden. Ich werde mir deinen Namen merken.";
+
+
+            addMessage(
+                "JARVIS: " + answer,
+                "jarvis-message"
+            );
+
+
+            if (
+                typeof speak ===
+                "function"
+            ) {
+
+                speak(answer);
+
+            }
+
+
+            return;
+        }
 
     }
 
 
-    else if (
-        lower.includes("wie heiße ich")
+    /* ======================================
+       NAME ABRUFEN
+    ====================================== */
+
+    if (
+        lower.includes("wie heiße ich") ||
+        lower.includes("was ist mein name") ||
+        lower.includes("kennst du meinen namen")
     ) {
 
         let name = null;
@@ -463,6 +713,9 @@ function sendText() {
                 getMemory("name");
 
         }
+
+
+        let answer;
 
 
         if (name) {
@@ -481,54 +734,257 @@ function sendText() {
 
         }
 
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
     }
 
 
-    else if (
+    /* ======================================
+       NAME VERGESSEN
+    ====================================== */
+
+    if (
+        lower.includes("vergiss meinen namen")
+    ) {
+
+        if (
+            typeof deleteMemory ===
+            "function"
+        ) {
+
+            deleteMemory("name");
+
+        }
+
+
+        const answer =
+            "Verstanden. Ich habe deinen Namen vergessen.";
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
+    }
+
+
+    /* ======================================
+       BEGRÜSSUNG
+    ====================================== */
+
+    if (
+        lower === "hallo" ||
+        lower === "hi" ||
+        lower === "hey"
+    ) {
+
+        let name = null;
+
+
+        if (
+            typeof getMemory ===
+            "function"
+        ) {
+
+            name =
+                getMemory("name");
+
+        }
+
+
+        let answer;
+
+
+        if (name) {
+
+            answer =
+                "Hallo " +
+                name +
+                ".";
+
+        }
+
+        else {
+
+            answer =
+                "Hallo. Ich bin JARVIS.";
+
+        }
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
+    }
+
+
+    /* ======================================
+       WER BIST DU
+    ====================================== */
+
+    if (
         lower.includes("wer bist du") ||
         lower.includes("wie heißt du")
     ) {
 
-        answer =
+        const answer =
             "Ich bin JARVIS, dein persönlicher Assistent.";
 
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
     }
 
 
-    else if (
+    /* ======================================
+       UHRZEIT
+    ====================================== */
+
+    if (
+        lower.includes("wie spät") ||
+        lower.includes("wie viel uhr") ||
+        lower.includes("uhrzeit")
+    ) {
+
+        const now =
+            new Date();
+
+
+        const answer =
+            "Es ist " +
+            String(
+                now.getHours()
+            ).padStart(2, "0") +
+            " Uhr " +
+            String(
+                now.getMinutes()
+            ).padStart(2, "0") +
+            ".";
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
+    }
+
+
+    /* ======================================
+       DANKE
+    ====================================== */
+
+    if (
         lower.includes("danke")
     ) {
 
-        answer =
+        const answer =
             "Gerne.";
 
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
     }
 
 
-    // JARVIS Nachricht
+    /* ======================================
+       STANDARD
+    ====================================== */
 
-    const jarvisMessage =
-        document.createElement("div");
-
-
-    jarvisMessage.className =
-        "message jarvis-message";
+    const answer =
+        "Diese Funktion muss ich noch lernen.";
 
 
-    jarvisMessage.textContent =
-        "JARVIS: " + answer;
-
-
-    chat.appendChild(
-        jarvisMessage
+    addMessage(
+        "JARVIS: " + answer,
+        "jarvis-message"
     );
 
-
-    chat.scrollTop =
-        chat.scrollHeight;
-
-
-    // Stimme
 
     if (
         typeof speak ===
@@ -539,17 +995,11 @@ function sendText() {
 
     }
 
-
-    console.log(
-        "JARVIS Antwort:",
-        answer
-    );
-
 }
 
 
 /* ==========================================
-   BUTTON
+   SENDEN BUTTON
 ========================================== */
 
 document
@@ -637,7 +1087,7 @@ document
 
 
 console.log(
-    "JARVIS IST BEREIT"
+    "JARVIS IST BEREIT."
 );
 
 </script>
