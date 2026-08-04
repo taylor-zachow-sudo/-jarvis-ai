@@ -144,6 +144,10 @@ function sendText() {
 
     input.value = "";
 
+    processMessage(text).then(function(handled) {
+
+    if (handled) return;
+
     const answer = jarvisReply(text);
 
     addMessage("JARVIS: " + answer, "jarvis-message");
@@ -151,4 +155,5 @@ function sendText() {
     if (typeof speak === "function") {
         speak(answer);
     }
-}
+
+});
