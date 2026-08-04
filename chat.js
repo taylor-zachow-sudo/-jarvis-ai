@@ -1,22 +1,39 @@
 ```javascript
+// ==========================================
+// JARVIS - EINFACHE CHAT VERSION
+// ==========================================
+
 function jarvisReply(text) {
 
     const originalText = text;
     const lower = text.toLowerCase();
 
-    // Namen speichern
+
+    // ==========================================
+    // NAMEN SPEICHERN
+    // ==========================================
+
     if (lower.includes("mein name ist ")) {
 
-        const start = lower.indexOf("mein name ist ") + 14;
-        const name = originalText.substring(start).trim();
+        const start =
+            lower.indexOf("mein name ist ") + 14;
+
+        const name =
+            originalText.substring(start).trim();
 
         if (name) {
+
             saveMemory("name", name);
+
             return "Verstanden. Ich werde mir deinen Namen merken.";
         }
     }
 
-    // Namen abrufen
+
+    // ==========================================
+    // NAMEN ABRUFEN
+    // ==========================================
+
     if (
         lower.includes("wie heiße ich") ||
         lower.includes("kennst du meinen namen")
@@ -31,13 +48,23 @@ function jarvisReply(text) {
         return "Du hast mir deinen Namen noch nicht gesagt.";
     }
 
-    // Namen vergessen
+
+    // ==========================================
+    // NAMEN VERGESSEN
+    // ==========================================
+
     if (lower.includes("vergiss meinen namen")) {
+
         deleteMemory("name");
+
         return "Verstanden. Ich habe deinen Namen vergessen.";
     }
 
-    // Begrüßung
+
+    // ==========================================
+    // BEGRÜSSUNG
+    // ==========================================
+
     if (
         lower.includes("hallo") ||
         lower.includes("hi") ||
@@ -53,23 +80,37 @@ function jarvisReply(text) {
         return "Hallo. Ich bin JARVIS.";
     }
 
-    // Wer bist du?
+
+    // ==========================================
+    // WER BIST DU?
+    // ==========================================
+
     if (
         lower.includes("wie heißt du") ||
         lower.includes("wer bist du")
     ) {
+
         return "Ich bin JARVIS, dein persönlicher Assistent.";
     }
 
-    // Befinden
+
+    // ==========================================
+    // WIE GEHT ES DIR?
+    // ==========================================
+
     if (
         lower.includes("wie geht es dir") ||
         lower.includes("wie geht's dir")
     ) {
+
         return "Alle Systeme funktionieren einwandfrei.";
     }
 
-    // Uhrzeit
+
+    // ==========================================
+    // UHRZEIT
+    // ==========================================
+
     if (
         lower.includes("wie spät") ||
         lower.includes("wie viel uhr") ||
@@ -78,14 +119,24 @@ function jarvisReply(text) {
 
         const jetzt = new Date();
 
+        const stunden =
+            String(jetzt.getHours()).padStart(2, "0");
+
+        const minuten =
+            String(jetzt.getMinutes()).padStart(2, "0");
+
         return "Es ist " +
-            jetzt.getHours() +
+            stunden +
             " Uhr " +
-            String(jetzt.getMinutes()).padStart(2, "0") +
+            minuten +
             ".";
     }
 
-    // Datum
+
+    // ==========================================
+    // DATUM
+    // ==========================================
+
     if (
         lower.includes("datum") ||
         lower.includes("welcher tag ist heute")
@@ -96,30 +147,45 @@ function jarvisReply(text) {
             ".";
     }
 
-    // Danke
+
+    // ==========================================
+    // DANKE
+    // ==========================================
+
     if (
         lower.includes("danke") ||
         lower.includes("dankeschön")
     ) {
+
         return "Gerne.";
     }
 
-    // Auf Wiedersehen
+
+    // ==========================================
+    // TSCHÜSS
+    // ==========================================
+
     if (
         lower.includes("tschüss") ||
         lower.includes("auf wiedersehen")
     ) {
+
         return "Auf Wiedersehen.";
     }
 
-    // Standardantwort
+
+    // ==========================================
+    // STANDARDANTWORT
+    // ==========================================
+
     return "Diese Funktion muss ich noch lernen.";
 }
 
 
-// ==================================================
-// CHAT NACHRICHT HINZUFÜGEN
-// ==================================================
+
+// ==========================================
+// NACHRICHT ZUM CHAT HINZUFÜGEN
+// ==========================================
 
 function addMessage(text, type) {
 
@@ -127,6 +193,7 @@ function addMessage(text, type) {
         document.getElementById("chat");
 
     if (!chat) return;
+
 
     const message =
         document.createElement("div");
@@ -136,16 +203,19 @@ function addMessage(text, type) {
 
     message.textContent = text;
 
+
     chat.appendChild(message);
+
 
     chat.scrollTop =
         chat.scrollHeight;
 }
 
 
-// ==================================================
-// TEXT SENDEN
-// ==================================================
+
+// ==========================================
+// NACHRICHT SENDEN
+// ==========================================
 
 function sendText() {
 
@@ -154,13 +224,14 @@ function sendText() {
 
     if (!input) return;
 
+
     const text =
         input.value.trim();
 
     if (!text) return;
 
 
-    // Benutzer-Nachricht
+    // Nachricht von dir anzeigen
     addMessage(
         "Du: " + text,
         "user-message"
@@ -171,20 +242,28 @@ function sendText() {
     input.value = "";
 
 
-    // JARVIS Antwort
+    // JARVIS Antwort erstellen
     const answer =
         jarvisReply(text);
 
 
-    // Antwort anzeigen
+    // JARVIS Antwort anzeigen
     addMessage(
         "JARVIS: " + answer,
         "jarvis-message"
     );
 
 
-    // Antwort sprechen
-    speak(answer);
+    // JARVIS spricht
+    if (typeof speak === "function") {
+
+        speak(answer);
+
+    } else {
+
+        console.error(
+            "FEHLER: speak() wurde nicht gefunden."
+        );
+    }
 }
 ```
-
