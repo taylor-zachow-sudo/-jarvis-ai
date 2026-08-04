@@ -1,16 +1,70 @@
+function jarvisReply(text) {
+    text = text.toLowerCase();
+
+    if (text.includes("hallo") || text.includes("hi")) {
+        return "Hallo. Ich bin JARVIS.";
+    }
+
+    if (text.includes("wie heißt du")) {
+        return "Ich bin JARVIS, dein persönlicher Assistent.";
+    }
+
+    if (text.includes("wie geht es dir")) {
+        return "Mir geht es ausgezeichnet. Alle Systeme sind online.";
+    }
+
+    if (text.includes("wer bist du")) {
+        return "Ich bin JARVIS. Deine persönliche KI.";
+    }
+
+    if (text.includes("wie spät") || text.includes("uhr")) {
+        const jetzt = new Date();
+
+        return "Es ist " +
+            jetzt.getHours() +
+            " Uhr " +
+            String(jetzt.getMinutes()).padStart(2, "0") +
+            ".";
+    }
+
+    if (text.includes("datum")) {
+        return "Heute ist der " +
+            new Date().toLocaleDateString("de-DE") +
+            ".";
+    }
+
+    if (text.includes("danke")) {
+        return "Gerne.";
+    }
+
+    return "Das habe ich verstanden. Diese Funktion lerne ich noch.";
+}
+
+
 function addMessage(text, type) {
+
     const chat = document.getElementById("chat");
 
+    if (!chat) return;
+
     const message = document.createElement("div");
+
     message.className = "message " + type;
+
     message.textContent = text;
 
     chat.appendChild(message);
+
     chat.scrollTop = chat.scrollHeight;
 }
 
+
 function sendText() {
+
     const input = document.getElementById("userInput");
+
+    if (!input) return;
+
     const text = input.value.trim();
 
     if (text === "") return;
@@ -23,6 +77,7 @@ function sendText() {
 
     addMessage("JARVIS: " + answer, "jarvis-message");
 
-    speak(answer);
+    if (typeof speak === "function") {
+        speak(answer);
+    }
 }
-        
