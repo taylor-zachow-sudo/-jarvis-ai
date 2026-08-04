@@ -6,7 +6,6 @@ function speak(text) {
     status.innerHTML = "JARVIS: " + text;
 
     if (!window.speechSynthesis) {
-        alert("Dein Browser unterstützt keine Sprachausgabe.");
         return;
     }
 
@@ -14,21 +13,24 @@ function speak(text) {
 
     const msg = new SpeechSynthesisUtterance(text);
 
-    msg.lang = "de-DE";
-    msg.rate = 0.85;
-    msg.pitch = 0.7;
+    msg.rate = 0.82;
+    msg.pitch = 0.65;
     msg.volume = 1;
 
-    // Stimmen laden
-    let voices = window.speechSynthesis.getVoices();
+    const voices = window.speechSynthesis.getVoices();
 
-    let voice = voices.find(function(v) {
-        return v.lang && v.lang.toLowerCase().startsWith("de");
-    });
+    // Bevorzugt eine englische/britische Stimme
+    const voice =
+        voices.find(v => v.lang === "en-GB") ||
+        voices.find(v => v.lang.startsWith("en-GB")) ||
+        voices.find(v => v.lang.startsWith("en"));
 
     if (voice) {
         msg.voice = voice;
     }
+
+    // Für britische Stimme
+    msg.lang = "en-GB";
 
     window.speechSynthesis.speak(msg);
 }
