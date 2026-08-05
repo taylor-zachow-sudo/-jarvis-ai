@@ -335,15 +335,15 @@ button:hover {
      JARVIS DATEIEN
 ========================================== -->
 
-<script src="memory.js?v=20"></script>
+<script src="memory.js?v=30"></script>
 
-<script src="weather.js?v=20"></script>
+<script src="weather.js?v=30"></script>
 
-<script src="reminders.js?v=20"></script>
+<script src="reminders.js?v=30"></script>
 
-<script src="script.js?v=20"></script>
+<script src="script.js?v=30"></script>
 
-<script src="chat.js?v=20"></script>
+<script src="chat.js?v=30"></script>
 
 
 <script>
@@ -612,12 +612,6 @@ function sendText() {
         }
 
 
-        /*
-         * Kleine Verzögerung,
-         * damit JARVIS die Antwort
-         * noch anzeigen kann.
-         */
-
         setTimeout(
             function() {
 
@@ -775,6 +769,42 @@ function sendText() {
 
         const answer =
             "Verstanden. Ich habe deinen Namen vergessen.";
+
+
+        addMessage(
+            "JARVIS: " + answer,
+            "jarvis-message"
+        );
+
+
+        if (
+            typeof speak ===
+            "function"
+        ) {
+
+            speak(answer);
+
+        }
+
+
+        return;
+    }
+
+
+    /* ======================================
+       WER HAT JARVIS ERSTELLT
+    ====================================== */
+
+    if (
+        lower.includes("wer hat dich erstellt") ||
+        lower.includes("wer hat dich gemacht") ||
+        lower.includes("wer hat dich programmiert") ||
+        lower.includes("wer ist dein ersteller") ||
+        lower.includes("wer ist dein schöpfer")
+    ) {
+
+        const answer =
+            "Ich wurde erstellt von Taylor.";
 
 
         addMessage(
