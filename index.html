@@ -2,16 +2,15 @@
 <html lang="de">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>JARVIS AI</title>
 
 <style>
-
-/* =====================================================
-   GRUNDLAYOUT
-===================================================== */
 
 * {
     box-sizing: border-box;
@@ -24,7 +23,7 @@ body {
     height: 100%;
     overflow: hidden;
     background: #000;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
     color: #00d9ff;
 }
 
@@ -33,9 +32,9 @@ body {
 }
 
 
-/* =====================================================
+/* ==========================================
    HINTERGRUND
-===================================================== */
+========================================== */
 
 .background {
     position: fixed;
@@ -44,36 +43,16 @@ body {
     background:
         radial-gradient(
             circle at center,
-            rgba(0, 70, 110, 0.35) 0%,
-            rgba(0, 20, 40, 0.18) 30%,
-            #000 70%
-        );
-
-    overflow: hidden;
-}
-
-
-/* horizontale HUD-Linien */
-
-.background::before {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent 0px,
-            transparent 4px,
-            rgba(0, 190, 255, 0.035) 5px
+            rgba(0, 80, 120, 0.35),
+            rgba(0, 20, 40, 0.15) 35%,
+            #000 75%
         );
 }
 
 
-/* =====================================================
+/* ==========================================
    HAUPTBEREICH
-===================================================== */
+========================================== */
 
 .jarvis-screen {
     position: relative;
@@ -83,16 +62,16 @@ body {
 
     display: flex;
     flex-direction: column;
-
     align-items: center;
 }
 
 
-/* =====================================================
+/* ==========================================
    TITEL
-===================================================== */
+========================================== */
 
 .top-title {
+
     position: absolute;
 
     top: 18px;
@@ -103,28 +82,25 @@ body {
 
     color: #5be8ff;
 
-    opacity: 0.9;
-
     text-shadow:
         0 0 8px #00d9ff,
         0 0 20px #00d9ff;
 }
 
 
-/* =====================================================
-   JARVIS HUD
-===================================================== */
+/* ==========================================
+   HUD
+========================================== */
 
 .hud {
 
     position: absolute;
 
     top: 50%;
-
     left: 50%;
 
-    width: 390px;
-    height: 390px;
+    width: 360px;
+    height: 360px;
 
     transform:
         translate(-50%, -50%);
@@ -156,12 +132,11 @@ body {
         rgba(0, 210, 255, 0.65);
 
     box-shadow:
-        0 0 15px rgba(0, 210, 255, 0.5),
-        inset 0 0 30px rgba(0, 150, 255, 0.15);
+        0 0 20px rgba(0, 210, 255, 0.4);
 }
 
 
-/* zweiter Kreis */
+/* innerer Kreis */
 
 .hud::after {
 
@@ -169,23 +144,20 @@ body {
 
     position: absolute;
 
-    width: 78%;
-    height: 78%;
+    width: 76%;
+    height: 76%;
 
     border-radius: 50%;
 
     border:
         1px solid
-        rgba(0, 190, 255, 0.4);
-
-    box-shadow:
-        0 0 15px rgba(0, 190, 255, 0.25);
+        rgba(0, 190, 255, 0.5);
 }
 
 
-/* =====================================================
-   ROTIERENDE RINGE
-===================================================== */
+/* ==========================================
+   RINGE
+========================================== */
 
 .ring {
 
@@ -195,11 +167,8 @@ body {
 
     border: 2px solid transparent;
 
-    border-top-color: #00d9ff;
-
-    border-right-color: rgba(0, 217, 255, 0.3);
-
-    animation: rotate 5s linear infinite;
+    animation:
+        rotate 6s linear infinite;
 }
 
 
@@ -208,7 +177,7 @@ body {
     width: 100%;
     height: 100%;
 
-    animation-duration: 8s;
+    border-top-color: #00d9ff;
 }
 
 
@@ -217,13 +186,11 @@ body {
     width: 88%;
     height: 88%;
 
-    border-top-color: transparent;
-
     border-bottom-color: #00d9ff;
 
-    animation-duration: 6s;
-
     animation-direction: reverse;
+
+    animation-duration: 5s;
 }
 
 
@@ -233,8 +200,6 @@ body {
     height: 68%;
 
     border-left-color: #00d9ff;
-
-    border-top-color: transparent;
 
     animation-duration: 4s;
 }
@@ -253,9 +218,9 @@ body {
 }
 
 
-/* =====================================================
-   JARVIS ZENTRUM
-===================================================== */
+/* ==========================================
+   JARVIS KERN
+========================================== */
 
 .core {
 
@@ -263,8 +228,8 @@ body {
 
     z-index: 5;
 
-    width: 145px;
-    height: 145px;
+    width: 140px;
+    height: 140px;
 
     border-radius: 50%;
 
@@ -276,53 +241,48 @@ body {
     background:
         radial-gradient(
             circle,
-            rgba(0, 190, 255, 0.18),
+            rgba(0, 190, 255, 0.2),
             rgba(0, 30, 50, 0.5) 65%,
             transparent
         );
 
     border:
         2px solid
-        rgba(0, 217, 255, 0.65);
+        rgba(0, 217, 255, 0.7);
 
     box-shadow:
-        0 0 15px #00d9ff,
-        0 0 45px rgba(0, 217, 255, 0.5),
-        inset 0 0 35px rgba(0, 217, 255, 0.3);
+        0 0 20px #00d9ff,
+        0 0 50px rgba(0, 217, 255, 0.5);
 
     animation:
-        corePulse 2.5s ease-in-out infinite;
+        pulse 2.5s infinite;
 }
 
 
-@keyframes corePulse {
+@keyframes pulse {
 
-    0%,
-    100% {
+    0% {
         transform: scale(1);
-        box-shadow:
-            0 0 15px #00d9ff,
-            0 0 35px rgba(0,217,255,.35),
-            inset 0 0 30px rgba(0,217,255,.2);
     }
 
     50% {
         transform: scale(1.06);
-        box-shadow:
-            0 0 25px #00d9ff,
-            0 0 70px rgba(0,217,255,.7),
-            inset 0 0 45px rgba(0,217,255,.4);
     }
+
+    100% {
+        transform: scale(1);
+    }
+
 }
 
 
 .core-text {
 
-    font-size: 19px;
+    font-size: 18px;
 
-    letter-spacing: 8px;
+    letter-spacing: 7px;
 
-    margin-left: 8px;
+    margin-left: 7px;
 
     font-weight: bold;
 
@@ -334,38 +294,36 @@ body {
 }
 
 
-/* =====================================================
+/* ==========================================
    STATUS
-===================================================== */
+========================================== */
 
 #status {
 
     position: absolute;
 
-    top: calc(50% + 210px);
+    top: calc(50% + 195px);
 
-    font-size: 12px;
+    font-size: 11px;
 
     letter-spacing: 4px;
 
-    color: #00d9ff;
+    text-align: center;
 
     text-shadow:
         0 0 8px #00d9ff;
-
-    text-align: center;
 }
 
 
-/* =====================================================
-   LINKES HUD PANEL
-===================================================== */
+/* ==========================================
+   LINKES SYSTEMPANEL
+========================================== */
 
 .system-panel {
 
     position: absolute;
 
-    left: 22px;
+    left: 15px;
 
     top: 50%;
 
@@ -376,35 +334,33 @@ body {
 
     flex-direction: column;
 
-    gap: 12px;
+    gap: 10px;
 }
 
 
 .panel {
 
-    width: 120px;
+    width: 105px;
 
-    height: 47px;
+    height: 43px;
 
-    padding: 6px 10px;
+    padding: 6px 8px;
 
-    border-left: 3px solid #00d9ff;
+    border-left:
+        3px solid #00d9ff;
 
-    border-top: 1px solid rgba(0,217,255,.35);
+    border-top:
+        1px solid rgba(0,217,255,.3);
 
-    border-bottom: 1px solid rgba(0,217,255,.2);
+    border-bottom:
+        1px solid rgba(0,217,255,.2);
 
     background:
-        rgba(0, 30, 45, 0.35);
+        rgba(0, 30, 45, .35);
 
-    color: #51dfff;
-
-    font-size: 9px;
+    font-size: 8px;
 
     letter-spacing: 2px;
-
-    text-shadow:
-        0 0 6px #00d9ff;
 }
 
 
@@ -412,34 +368,90 @@ body {
 
     display: block;
 
-    margin-top: 4px;
+    margin-top: 3px;
 
-    font-size: 14px;
-
-    letter-spacing: 2px;
+    font-size: 12px;
 
     color: #00d9ff;
 }
 
 
-/* =====================================================
-   UNTERE SPRACHANIMATION
-===================================================== */
+/* ==========================================
+   CHAT
+========================================== */
 
-.voice-area {
+#chat {
 
     position: absolute;
 
-    bottom: 105px;
+    top: 55px;
 
     left: 50%;
 
     transform:
         translateX(-50%);
 
-    width: 260px;
+    width: 90%;
 
-    height: 55px;
+    max-width: 500px;
+
+    max-height: 120px;
+
+    overflow-y: auto;
+
+    z-index: 10;
+}
+
+
+.message {
+
+    padding: 7px 10px;
+
+    margin: 5px 0;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    background:
+        rgba(0, 25, 40, .7);
+}
+
+
+.user-message {
+
+    color: white;
+
+    text-align: right;
+}
+
+
+.jarvis-message {
+
+    color: #00d9ff;
+
+    text-align: left;
+}
+
+
+/* ==========================================
+   SPRACHANIMATION
+========================================== */
+
+.voice-area {
+
+    position: absolute;
+
+    bottom: 130px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 230px;
+
+    height: 45px;
 
     display: flex;
 
@@ -455,15 +467,15 @@ body {
 
     width: 3px;
 
-    height: 15px;
+    height: 12px;
 
     background: #00d9ff;
 
     box-shadow:
-        0 0 8px #00d9ff;
+        0 0 7px #00d9ff;
 
     animation:
-        voice 1s ease-in-out infinite;
+        voice 1s infinite;
 }
 
 
@@ -495,14 +507,6 @@ body {
     animation-delay: .3s;
 }
 
-.bar:nth-child(9) {
-    animation-delay: .15s;
-}
-
-.bar:nth-child(10) {
-    animation-delay: .25s;
-}
-
 
 @keyframes voice {
 
@@ -512,84 +516,21 @@ body {
     }
 
     50% {
-        height: 42px;
+        height: 38px;
     }
+
 }
 
 
-/* =====================================================
-   CHAT
-===================================================== */
-
-#chat {
-
-    position: absolute;
-
-    top: 20px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    width: 90%;
-
-    max-width: 500px;
-
-    max-height: 130px;
-
-    overflow-y: auto;
-
-    padding: 5px;
-
-    z-index: 20;
-}
-
-
-.message {
-
-    padding: 7px 10px;
-
-    margin: 5px 0;
-
-    border-radius: 7px;
-
-    font-size: 13px;
-
-    background:
-        rgba(0, 25, 40, 0.65);
-
-    border:
-        1px solid
-        rgba(0,217,255,.2);
-}
-
-
-.user-message {
-
-    color: white;
-
-    text-align: right;
-}
-
-
-.jarvis-message {
-
-    color: #00d9ff;
-
-    text-align: left;
-}
-
-
-/* =====================================================
-   EINGABEFELD
-===================================================== */
+/* ==========================================
+   EINGABE
+========================================== */
 
 .input-area {
 
     position: fixed;
 
-    bottom: 22px;
+    bottom: 20px;
 
     left: 50%;
 
@@ -604,7 +545,7 @@ body {
 
     gap: 8px;
 
-    z-index: 50;
+    z-index: 100;
 }
 
 
@@ -618,23 +559,18 @@ body {
         0 18px;
 
     border:
-        1px solid
-        #00d9ff;
+        1px solid #00d9ff;
 
     border-radius: 25px;
 
     outline: none;
 
     background:
-        rgba(0, 15, 25, 0.9);
+        rgba(0, 15, 25, .95);
 
     color: white;
 
     font-size: 15px;
-
-    box-shadow:
-        0 0 12px
-        rgba(0,217,255,.2);
 }
 
 
@@ -657,29 +593,25 @@ body {
         1px solid #00d9ff;
 
     background:
-        rgba(0, 30, 45, 0.9);
+        rgba(0, 30, 45, .95);
 
     color: #00d9ff;
 
     font-size: 20px;
 
     cursor: pointer;
-
-    box-shadow:
-        0 0 12px
-        rgba(0,217,255,.35);
 }
 
 
-/* =====================================================
+/* ==========================================
    BUTTONS
-===================================================== */
+========================================== */
 
 .control-buttons {
 
     position: fixed;
 
-    bottom: 82px;
+    bottom: 78px;
 
     left: 50%;
 
@@ -690,7 +622,7 @@ body {
 
     gap: 8px;
 
-    z-index: 50;
+    z-index: 100;
 }
 
 
@@ -700,36 +632,31 @@ body {
         9px 15px;
 
     border:
-        1px solid
-        #00d9ff;
+        1px solid #00d9ff;
 
     border-radius: 20px;
 
     background:
-        rgba(0, 20, 30, 0.8);
+        rgba(0, 20, 30, .9);
 
     color: #00d9ff;
 
     font-size: 12px;
 
     cursor: pointer;
-
-    box-shadow:
-        0 0 10px
-        rgba(0,217,255,.2);
 }
 
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* ==========================================
+   HANDY
+========================================== */
 
 @media (max-width: 600px) {
 
     .hud {
 
-        width: 330px;
-        height: 330px;
+        width: 320px;
+        height: 320px;
     }
 
 
@@ -744,23 +671,23 @@ body {
 
         font-size: 15px;
 
-        letter-spacing: 6px;
+        letter-spacing: 5px;
     }
 
 
     .system-panel {
 
-        left: 10px;
+        left: 5px;
 
-        gap: 7px;
+        gap: 6px;
     }
 
 
     .panel {
 
-        width: 95px;
+        width: 88px;
 
-        height: 42px;
+        height: 39px;
 
         font-size: 7px;
     }
@@ -768,40 +695,27 @@ body {
 
     .panel span {
 
-        font-size: 11px;
+        font-size: 10px;
     }
 
 
     #status {
 
-        top: calc(50% + 180px);
+        top: calc(50% + 175px);
 
         font-size: 9px;
-
-        letter-spacing: 3px;
     }
 
 
     .voice-area {
 
-        bottom: 150px;
-
-        width: 200px;
+        bottom: 135px;
     }
 
 
     .control-buttons {
 
-        bottom: 78px;
-    }
-
-
-    .control-button {
-
-        padding:
-            8px 10px;
-
-        font-size: 10px;
+        bottom: 75px;
     }
 
 }
@@ -820,25 +734,17 @@ body {
 <div class="jarvis-screen">
 
 
-    <!-- ==========================================
-         TITEL
-    =========================================== -->
-
     <div class="top-title">
         J A R V I S
     </div>
 
 
-    <!-- ==========================================
-         CHAT
-    =========================================== -->
+    <!-- CHAT -->
 
     <div id="chat"></div>
 
 
-    <!-- ==========================================
-         HUD
-    =========================================== -->
+    <!-- HUD -->
 
     <div class="hud">
 
@@ -860,18 +766,14 @@ body {
     </div>
 
 
-    <!-- ==========================================
-         STATUS
-    =========================================== -->
+    <!-- STATUS -->
 
     <div id="status">
         SYSTEM ONLINE
     </div>
 
 
-    <!-- ==========================================
-         SYSTEM PANEL
-    =========================================== -->
+    <!-- SYSTEM -->
 
     <div class="system-panel">
 
@@ -903,14 +805,10 @@ body {
     </div>
 
 
-    <!-- ==========================================
-         SPRACHANIMATION
-    =========================================== -->
+    <!-- SPRACHANIMATION -->
 
     <div class="voice-area">
 
-        <div class="bar"></div>
-        <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
@@ -923,9 +821,7 @@ body {
     </div>
 
 
-    <!-- ==========================================
-         EINGABE
-    =========================================== -->
+    <!-- EINGABE -->
 
     <div class="input-area">
 
@@ -946,9 +842,7 @@ body {
     </div>
 
 
-    <!-- ==========================================
-         STEUERUNG
-    =========================================== -->
+    <!-- BUTTONS -->
 
     <div class="control-buttons">
 
@@ -959,6 +853,7 @@ body {
         >
             🔊 Stimme
         </button>
+
 
         <button
             id="micButton"
@@ -974,18 +869,22 @@ body {
 
 
 <!-- ==========================================
-     DEINE FUNKTIONEN
+     DATEIEN
 ========================================== -->
 
 <script src="memory.js"></script>
+
 <script src="weather.js"></script>
+
 <script src="reminders.js"></script>
+
 <script src="script.js"></script>
+
 <script src="chat.js"></script>
 
 
 <!-- ==========================================
-     BUTTONEN
+     NUR BUTTONEN VERBINDEN
 ========================================== -->
 
 <script>
@@ -1025,7 +924,7 @@ document.addEventListener(
                     } else {
 
                         console.error(
-                            "sendText() fehlt."
+                            "FEHLER: chat.js / sendText fehlt!"
                         );
 
                     }
