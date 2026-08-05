@@ -1,136 +1,571 @@
-```html
 <!DOCTYPE html>
 <html lang="de">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>JARVIS AI</title>
 
 <style>
 
+/* =====================================================
+   GRUNDLAYOUT
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
 
+html,
 body {
     margin: 0;
-    background: #050b14;
-    font-family: Arial, sans-serif;
-    color: #00d9ff;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #00d9ff;
+}
+
+body {
+    position: relative;
+}
+
+
+/* =====================================================
+   HINTERGRUND
+===================================================== */
+
+.background {
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0, 70, 110, 0.35) 0%,
+            rgba(0, 20, 40, 0.18) 30%,
+            #000 70%
+        );
+
+    overflow: hidden;
+}
+
+
+/* horizontale HUD-Linien */
+
+.background::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 4px,
+            rgba(0, 190, 255, 0.035) 5px
+        );
+}
+
+
+/* =====================================================
+   HAUPTBEREICH
+===================================================== */
+
+.jarvis-screen {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
 }
 
 
-/* ==========================================
-   JARVIS KREIS
-========================================== */
+/* =====================================================
+   TITEL
+===================================================== */
 
-.circle {
+.top-title {
+    position: absolute;
 
-    width: 200px;
-    height: 200px;
+    top: 18px;
+
+    font-size: 13px;
+
+    letter-spacing: 7px;
+
+    color: #5be8ff;
+
+    opacity: 0.9;
+
+    text-shadow:
+        0 0 8px #00d9ff,
+        0 0 20px #00d9ff;
+}
+
+
+/* =====================================================
+   JARVIS HUD
+===================================================== */
+
+.hud {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    width: 390px;
+    height: 390px;
+
+    transform:
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
-    border: 4px solid #00d9ff;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* äußerer Kreis */
+
+.hud::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        rgba(0, 210, 255, 0.65);
 
     box-shadow:
-        0 0 20px #00d9ff,
-        0 0 50px #00d9ff;
+        0 0 15px rgba(0, 210, 255, 0.5),
+        inset 0 0 30px rgba(0, 150, 255, 0.15);
+}
 
-    animation: pulse 2s infinite;
+
+/* zweiter Kreis */
+
+.hud::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 78%;
+    height: 78%;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(0, 190, 255, 0.4);
+
+    box-shadow:
+        0 0 15px rgba(0, 190, 255, 0.25);
+}
+
+
+/* =====================================================
+   ROTIERENDE RINGE
+===================================================== */
+
+.ring {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    border: 2px solid transparent;
+
+    border-top-color: #00d9ff;
+
+    border-right-color: rgba(0, 217, 255, 0.3);
+
+    animation: rotate 5s linear infinite;
+}
+
+
+.ring.one {
+
+    width: 100%;
+    height: 100%;
+
+    animation-duration: 8s;
+}
+
+
+.ring.two {
+
+    width: 88%;
+    height: 88%;
+
+    border-top-color: transparent;
+
+    border-bottom-color: #00d9ff;
+
+    animation-duration: 6s;
+
+    animation-direction: reverse;
+}
+
+
+.ring.three {
+
+    width: 68%;
+    height: 68%;
+
+    border-left-color: #00d9ff;
+
+    border-top-color: transparent;
+
+    animation-duration: 4s;
+}
+
+
+@keyframes rotate {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =====================================================
+   JARVIS ZENTRUM
+===================================================== */
+
+.core {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: 145px;
+    height: 145px;
+
+    border-radius: 50%;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
-    font-size: 30px;
-    font-weight: bold;
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 190, 255, 0.18),
+            rgba(0, 30, 50, 0.5) 65%,
+            transparent
+        );
 
-    margin-top: 30px;
+    border:
+        2px solid
+        rgba(0, 217, 255, 0.65);
+
+    box-shadow:
+        0 0 15px #00d9ff,
+        0 0 45px rgba(0, 217, 255, 0.5),
+        inset 0 0 35px rgba(0, 217, 255, 0.3);
+
+    animation:
+        corePulse 2.5s ease-in-out infinite;
 }
 
 
-@keyframes pulse {
+@keyframes corePulse {
 
-    0% {
+    0%,
+    100% {
         transform: scale(1);
+        box-shadow:
+            0 0 15px #00d9ff,
+            0 0 35px rgba(0,217,255,.35),
+            inset 0 0 30px rgba(0,217,255,.2);
     }
 
     50% {
-        transform: scale(1.07);
-    }
-
-    100% {
-        transform: scale(1);
+        transform: scale(1.06);
+        box-shadow:
+            0 0 25px #00d9ff,
+            0 0 70px rgba(0,217,255,.7),
+            inset 0 0 45px rgba(0,217,255,.4);
     }
 }
 
 
-/* ==========================================
+.core-text {
+
+    font-size: 19px;
+
+    letter-spacing: 8px;
+
+    margin-left: 8px;
+
+    font-weight: bold;
+
+    color: #76edff;
+
+    text-shadow:
+        0 0 8px #00d9ff,
+        0 0 18px #00d9ff;
+}
+
+
+/* =====================================================
    STATUS
-========================================== */
+===================================================== */
 
 #status {
 
-    margin-top: 15px;
+    position: absolute;
 
-    font-size: 18px;
+    top: calc(50% + 210px);
+
+    font-size: 12px;
+
+    letter-spacing: 4px;
+
+    color: #00d9ff;
+
+    text-shadow:
+        0 0 8px #00d9ff;
 
     text-align: center;
 }
 
 
-/* ==========================================
+/* =====================================================
+   LINKES HUD PANEL
+===================================================== */
+
+.system-panel {
+
+    position: absolute;
+
+    left: 22px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.panel {
+
+    width: 120px;
+
+    height: 47px;
+
+    padding: 6px 10px;
+
+    border-left: 3px solid #00d9ff;
+
+    border-top: 1px solid rgba(0,217,255,.35);
+
+    border-bottom: 1px solid rgba(0,217,255,.2);
+
+    background:
+        rgba(0, 30, 45, 0.35);
+
+    color: #51dfff;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    text-shadow:
+        0 0 6px #00d9ff;
+}
+
+
+.panel span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+
+    letter-spacing: 2px;
+
+    color: #00d9ff;
+}
+
+
+/* =====================================================
+   UNTERE SPRACHANIMATION
+===================================================== */
+
+.voice-area {
+
+    position: absolute;
+
+    bottom: 105px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 260px;
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+}
+
+
+.bar {
+
+    width: 3px;
+
+    height: 15px;
+
+    background: #00d9ff;
+
+    box-shadow:
+        0 0 8px #00d9ff;
+
+    animation:
+        voice 1s ease-in-out infinite;
+}
+
+
+.bar:nth-child(2) {
+    animation-delay: .1s;
+}
+
+.bar:nth-child(3) {
+    animation-delay: .2s;
+}
+
+.bar:nth-child(4) {
+    animation-delay: .3s;
+}
+
+.bar:nth-child(5) {
+    animation-delay: .4s;
+}
+
+.bar:nth-child(6) {
+    animation-delay: .2s;
+}
+
+.bar:nth-child(7) {
+    animation-delay: .1s;
+}
+
+.bar:nth-child(8) {
+    animation-delay: .3s;
+}
+
+.bar:nth-child(9) {
+    animation-delay: .15s;
+}
+
+.bar:nth-child(10) {
+    animation-delay: .25s;
+}
+
+
+@keyframes voice {
+
+    0%,
+    100% {
+        height: 10px;
+    }
+
+    50% {
+        height: 42px;
+    }
+}
+
+
+/* =====================================================
    CHAT
-========================================== */
+===================================================== */
 
 #chat {
 
-    width: 90%;
-    max-width: 600px;
+    position: absolute;
 
-    height: 45vh;
+    top: 20px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 90%;
+
+    max-width: 500px;
+
+    max-height: 130px;
 
     overflow-y: auto;
 
-    margin-top: 15px;
+    padding: 5px;
 
-    padding: 10px;
-
-    border: 1px solid #00d9ff;
-
-    border-radius: 15px;
-
-    background: #06121f;
+    z-index: 20;
 }
 
 
 .message {
 
-    padding: 10px;
+    padding: 7px 10px;
 
-    margin: 7px 0;
+    margin: 5px 0;
 
-    border-radius: 10px;
+    border-radius: 7px;
 
-    word-wrap: break-word;
+    font-size: 13px;
+
+    background:
+        rgba(0, 25, 40, 0.65);
+
+    border:
+        1px solid
+        rgba(0,217,255,.2);
 }
 
 
 .user-message {
-
-    background: #10283a;
 
     color: white;
 
@@ -140,35 +575,36 @@ body {
 
 .jarvis-message {
 
-    background: #071a25;
-
     color: #00d9ff;
 
     text-align: left;
 }
 
 
-/* ==========================================
-   EINGABE
-========================================== */
+/* =====================================================
+   EINGABEFELD
+===================================================== */
 
 .input-area {
 
     position: fixed;
 
-    bottom: 80px;
+    bottom: 22px;
 
     left: 50%;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
-    width: 90%;
+    width: 92%;
 
-    max-width: 600px;
+    max-width: 520px;
 
     display: flex;
 
     gap: 8px;
+
+    z-index: 50;
 }
 
 
@@ -176,82 +612,198 @@ body {
 
     flex: 1;
 
-    padding: 14px;
+    height: 48px;
+
+    padding:
+        0 18px;
+
+    border:
+        1px solid
+        #00d9ff;
 
     border-radius: 25px;
 
-    border: 2px solid #00d9ff;
+    outline: none;
 
-    background: #08121e;
+    background:
+        rgba(0, 15, 25, 0.9);
 
     color: white;
 
-    font-size: 17px;
+    font-size: 15px;
 
-    outline: none;
+    box-shadow:
+        0 0 12px
+        rgba(0,217,255,.2);
+}
+
+
+#userInput::placeholder {
+
+    color:
+        rgba(0,217,255,.55);
 }
 
 
 #sendButton {
 
-    width: 55px;
-    height: 55px;
+    width: 48px;
+
+    height: 48px;
 
     border-radius: 50%;
 
-    border: none;
+    border:
+        1px solid #00d9ff;
 
-    background: #00d9ff;
+    background:
+        rgba(0, 30, 45, 0.9);
 
-    color: #050b14;
+    color: #00d9ff;
 
-    font-size: 25px;
+    font-size: 20px;
 
     cursor: pointer;
+
+    box-shadow:
+        0 0 12px
+        rgba(0,217,255,.35);
 }
 
 
-#sendButton:active {
-    transform: scale(0.9);
-}
-
-
-/* ==========================================
+/* =====================================================
    BUTTONS
-========================================== */
+===================================================== */
 
 .control-buttons {
 
     position: fixed;
 
-    bottom: 15px;
+    bottom: 82px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
 
     display: flex;
 
-    gap: 10px;
+    gap: 8px;
+
+    z-index: 50;
 }
 
 
 .control-button {
 
-    padding: 12px 20px;
+    padding:
+        9px 15px;
 
-    border: none;
+    border:
+        1px solid
+        #00d9ff;
 
-    border-radius: 30px;
+    border-radius: 20px;
 
-    background: #00d9ff;
+    background:
+        rgba(0, 20, 30, 0.8);
 
-    color: #050b14;
+    color: #00d9ff;
 
-    font-size: 15px;
+    font-size: 12px;
 
     cursor: pointer;
+
+    box-shadow:
+        0 0 10px
+        rgba(0,217,255,.2);
 }
 
 
-button:hover {
-    background: white;
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .hud {
+
+        width: 330px;
+        height: 330px;
+    }
+
+
+    .core {
+
+        width: 115px;
+        height: 115px;
+    }
+
+
+    .core-text {
+
+        font-size: 15px;
+
+        letter-spacing: 6px;
+    }
+
+
+    .system-panel {
+
+        left: 10px;
+
+        gap: 7px;
+    }
+
+
+    .panel {
+
+        width: 95px;
+
+        height: 42px;
+
+        font-size: 7px;
+    }
+
+
+    .panel span {
+
+        font-size: 11px;
+    }
+
+
+    #status {
+
+        top: calc(50% + 180px);
+
+        font-size: 9px;
+
+        letter-spacing: 3px;
+    }
+
+
+    .voice-area {
+
+        bottom: 150px;
+
+        width: 200px;
+    }
+
+
+    .control-buttons {
+
+        bottom: 78px;
+    }
+
+
+    .control-button {
+
+        padding:
+            8px 10px;
+
+        font-size: 10px;
+    }
+
 }
 
 </style>
@@ -262,867 +814,312 @@ button:hover {
 <body>
 
 
-<!-- ==========================================
-     JARVIS
-========================================== -->
+<div class="background"></div>
 
-<div class="circle">
-    JARVIS
+
+<div class="jarvis-screen">
+
+
+    <!-- ==========================================
+         TITEL
+    =========================================== -->
+
+    <div class="top-title">
+        J A R V I S
+    </div>
+
+
+    <!-- ==========================================
+         CHAT
+    =========================================== -->
+
+    <div id="chat"></div>
+
+
+    <!-- ==========================================
+         HUD
+    =========================================== -->
+
+    <div class="hud">
+
+        <div class="ring one"></div>
+
+        <div class="ring two"></div>
+
+        <div class="ring three"></div>
+
+
+        <div class="core">
+
+            <div class="core-text">
+                JARVIS
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         STATUS
+    =========================================== -->
+
+    <div id="status">
+        SYSTEM ONLINE
+    </div>
+
+
+    <!-- ==========================================
+         SYSTEM PANEL
+    =========================================== -->
+
+    <div class="system-panel">
+
+        <div class="panel">
+            SYSTEM
+            <span>ONLINE</span>
+        </div>
+
+        <div class="panel">
+            MEMORY
+            <span>ACTIVE</span>
+        </div>
+
+        <div class="panel">
+            VOICE
+            <span>READY</span>
+        </div>
+
+        <div class="panel">
+            WEATHER
+            <span>READY</span>
+        </div>
+
+        <div class="panel">
+            APPS
+            <span>READY</span>
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SPRACHANIMATION
+    =========================================== -->
+
+    <div class="voice-area">
+
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EINGABE
+    =========================================== -->
+
+    <div class="input-area">
+
+        <input
+            id="userInput"
+            type="text"
+            placeholder="Frag JARVIS..."
+            autocomplete="off"
+        >
+
+        <button
+            id="sendButton"
+            type="button"
+        >
+            ➤
+        </button>
+
+    </div>
+
+
+    <!-- ==========================================
+         STEUERUNG
+    =========================================== -->
+
+    <div class="control-buttons">
+
+        <button
+            id="voiceButton"
+            class="control-button"
+            type="button"
+        >
+            🔊 Stimme
+        </button>
+
+        <button
+            id="micButton"
+            class="control-button"
+            type="button"
+        >
+            🎤 Sprechen
+        </button>
+
+    </div>
+
 </div>
 
 
-<div id="status">
-    SYSTEM ONLINE
-</div>
+<!-- ==========================================
+     DEINE FUNKTIONEN
+========================================== -->
+
+<script src="memory.js"></script>
+<script src="weather.js"></script>
+<script src="reminders.js"></script>
+<script src="script.js"></script>
+<script src="chat.js"></script>
 
 
 <!-- ==========================================
-     CHAT
+     BUTTONEN
 ========================================== -->
-
-<div id="chat"></div>
-
-
-<!-- ==========================================
-     EINGABE
-========================================== -->
-
-<div class="input-area">
-
-    <input
-        id="userInput"
-        type="text"
-        placeholder="Nachricht an JARVIS..."
-        autocomplete="off"
-    >
-
-    <button
-        id="sendButton"
-        type="button"
-    >
-        ➤
-    </button>
-
-</div>
-
-
-<!-- ==========================================
-     STEUERUNG
-========================================== -->
-
-<div class="control-buttons">
-
-    <button
-        id="voiceButton"
-        class="control-button"
-        type="button"
-    >
-        🔊 Stimme testen
-    </button>
-
-    <button
-        id="micButton"
-        class="control-button"
-        type="button"
-    >
-        🎤 Aktivieren
-    </button>
-
-</div>
-
-
-<!-- ==========================================
-     JARVIS DATEIEN
-========================================== -->
-
-<script src="memory.js?v=30"></script>
-
-<script src="weather.js?v=30"></script>
-
-<script src="reminders.js?v=30"></script>
-
-<script src="script.js?v=30"></script>
-
-<script src="chat.js?v=30"></script>
-
 
 <script>
 
-/* ==========================================
-   JARVIS START
-========================================== */
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
-console.log("JARVIS wird gestartet...");
+        const sendButton =
+            document.getElementById("sendButton");
 
+        const userInput =
+            document.getElementById("userInput");
 
-/* ==========================================
-   NACHRICHT ANZEIGEN
-========================================== */
+        const voiceButton =
+            document.getElementById("voiceButton");
 
-function addMessage(text, type) {
+        const micButton =
+            document.getElementById("micButton");
 
-    const chat =
-        document.getElementById("chat");
 
-    if (!chat) {
-        return;
-    }
+        /* SENDEN */
 
-    const message =
-        document.createElement("div");
+        if (sendButton) {
 
-    message.className =
-        "message " + type;
+            sendButton.addEventListener(
+                "click",
+                function() {
 
-    message.textContent =
-        text;
+                    if (
+                        typeof sendText ===
+                        "function"
+                    ) {
 
-    chat.appendChild(message);
+                        sendText();
 
-    chat.scrollTop =
-        chat.scrollHeight;
-}
+                    } else {
 
+                        console.error(
+                            "sendText() fehlt."
+                        );
 
-/* ==========================================
-   APP ÖFFNEN
-========================================== */
+                    }
 
-function openApp(app) {
-
-    let url = "";
-
-
-    if (app === "youtube") {
-
-        url = "https://youtube.com";
-
-    }
-
-
-    else if (app === "whatsapp") {
-
-        url = "whatsapp://";
-
-    }
-
-
-    else if (app === "spotify") {
-
-        url = "spotify://";
-
-    }
-
-
-    else if (app === "instagram") {
-
-        url = "instagram://";
-
-    }
-
-
-    else if (app === "tiktok") {
-
-        url = "tiktok://";
-
-    }
-
-
-    else if (app === "google") {
-
-        url = "https://google.com";
-
-    }
-
-
-    if (url) {
-
-        console.log(
-            "JARVIS öffnet:",
-            app
-        );
-
-        window.location.href = url;
-
-    }
-
-}
-
-
-/* ==========================================
-   APP-BEFEHL ERKENNEN
-========================================== */
-
-function checkAppCommand(text) {
-
-    const lower =
-        text.toLowerCase();
-
-
-    if (
-        lower.includes("öffne youtube") ||
-        lower.includes("starte youtube")
-    ) {
-
-        return "youtube";
-
-    }
-
-
-    if (
-        lower.includes("öffne whatsapp") ||
-        lower.includes("starte whatsapp")
-    ) {
-
-        return "whatsapp";
-
-    }
-
-
-    if (
-        lower.includes("öffne spotify") ||
-        lower.includes("starte spotify")
-    ) {
-
-        return "spotify";
-
-    }
-
-
-    if (
-        lower.includes("öffne instagram") ||
-        lower.includes("starte instagram")
-    ) {
-
-        return "instagram";
-
-    }
-
-
-    if (
-        lower.includes("öffne tiktok") ||
-        lower.includes("starte tiktok")
-    ) {
-
-        return "tiktok";
-
-    }
-
-
-    if (
-        lower.includes("öffne google") ||
-        lower.includes("starte google")
-    ) {
-
-        return "google";
-
-    }
-
-
-    return null;
-}
-
-
-/* ==========================================
-   NACHRICHT SENDEN
-========================================== */
-
-function sendText() {
-
-    console.log(
-        "JARVIS sendText gestartet."
-    );
-
-
-    const input =
-        document.getElementById("userInput");
-
-
-    if (!input) {
-
-        alert(
-            "JARVIS: Eingabefeld nicht gefunden."
-        );
-
-        return;
-    }
-
-
-    const text =
-        input.value.trim();
-
-
-    if (!text) {
-
-        return;
-    }
-
-
-    /* ======================================
-       BENUTZER-NACHRICHT
-    ====================================== */
-
-    addMessage(
-        "Du: " + text,
-        "user-message"
-    );
-
-
-    input.value = "";
-
-
-    const lower =
-        text.toLowerCase();
-
-
-    /* ======================================
-       APPS
-    ====================================== */
-
-    const app =
-        checkAppCommand(text);
-
-
-    if (app) {
-
-        let appName =
-            app.charAt(0).toUpperCase() +
-            app.slice(1);
-
-
-        const answer =
-            "Ich öffne " +
-            appName +
-            ".";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        setTimeout(
-            function() {
-
-                openApp(app);
-
-            },
-            500
-        );
-
-
-        return;
-    }
-
-
-    /* ======================================
-       NAME SPEICHERN
-    ====================================== */
-
-    if (
-        lower.includes("mein name ist ")
-    ) {
-
-        const position =
-            lower.indexOf("mein name ist ");
-
-
-        const name =
-            text.substring(
-                position + 14
-            ).trim();
-
-
-        if (name) {
-
-            if (
-                typeof saveMemory ===
-                "function"
-            ) {
-
-                saveMemory(
-                    "name",
-                    name
-                );
-
-            }
-
-
-            const answer =
-                "Verstanden. Ich werde mir deinen Namen merken.";
-
-
-            addMessage(
-                "JARVIS: " + answer,
-                "jarvis-message"
+                }
             );
 
-
-            if (
-                typeof speak ===
-                "function"
-            ) {
-
-                speak(answer);
-
-            }
+        }
 
 
-            return;
+        /* ENTER */
+
+        if (userInput) {
+
+            userInput.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        if (
+                            typeof sendText ===
+                            "function"
+                        ) {
+
+                            sendText();
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* STIMME */
+
+        if (voiceButton) {
+
+            voiceButton.addEventListener(
+                "click",
+                function() {
+
+                    if (
+                        typeof speak ===
+                        "function"
+                    ) {
+
+                        speak(
+                            "Hallo. Ich bin JARVIS."
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* MIKROFON */
+
+        if (micButton) {
+
+            micButton.addEventListener(
+                "click",
+                function() {
+
+                    if (
+                        typeof startJarvis ===
+                        "function"
+                    ) {
+
+                        startJarvis();
+
+                    }
+
+                }
+            );
+
         }
 
     }
-
-
-    /* ======================================
-       NAME ABRUFEN
-    ====================================== */
-
-    if (
-        lower.includes("wie heiße ich") ||
-        lower.includes("was ist mein name") ||
-        lower.includes("kennst du meinen namen")
-    ) {
-
-        let name = null;
-
-
-        if (
-            typeof getMemory ===
-            "function"
-        ) {
-
-            name =
-                getMemory("name");
-
-        }
-
-
-        let answer;
-
-
-        if (name) {
-
-            answer =
-                "Du heißt " +
-                name +
-                ".";
-
-        }
-
-        else {
-
-            answer =
-                "Du hast mir deinen Namen noch nicht gesagt.";
-
-        }
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       NAME VERGESSEN
-    ====================================== */
-
-    if (
-        lower.includes("vergiss meinen namen")
-    ) {
-
-        if (
-            typeof deleteMemory ===
-            "function"
-        ) {
-
-            deleteMemory("name");
-
-        }
-
-
-        const answer =
-            "Verstanden. Ich habe deinen Namen vergessen.";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       WER HAT JARVIS ERSTELLT
-    ====================================== */
-
-    if (
-        lower.includes("wer hat dich erstellt") ||
-        lower.includes("wer hat dich gemacht") ||
-        lower.includes("wer hat dich programmiert") ||
-        lower.includes("wer ist dein ersteller") ||
-        lower.includes("wer ist dein schöpfer")
-    ) {
-
-        const answer =
-            "Ich wurde erstellt von Taylor.";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       BEGRÜSSUNG
-    ====================================== */
-
-    if (
-        lower === "hallo" ||
-        lower === "hi" ||
-        lower === "hey"
-    ) {
-
-        let name = null;
-
-
-        if (
-            typeof getMemory ===
-            "function"
-        ) {
-
-            name =
-                getMemory("name");
-
-        }
-
-
-        let answer;
-
-
-        if (name) {
-
-            answer =
-                "Hallo " +
-                name +
-                ".";
-
-        }
-
-        else {
-
-            answer =
-                "Hallo. Ich bin JARVIS.";
-
-        }
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       WER BIST DU
-    ====================================== */
-
-    if (
-        lower.includes("wer bist du") ||
-        lower.includes("wie heißt du")
-    ) {
-
-        const answer =
-            "Ich bin JARVIS, dein persönlicher Assistent.";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       UHRZEIT
-    ====================================== */
-
-    if (
-        lower.includes("wie spät") ||
-        lower.includes("wie viel uhr") ||
-        lower.includes("uhrzeit")
-    ) {
-
-        const now =
-            new Date();
-
-
-        const answer =
-            "Es ist " +
-            String(
-                now.getHours()
-            ).padStart(2, "0") +
-            " Uhr " +
-            String(
-                now.getMinutes()
-            ).padStart(2, "0") +
-            ".";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       DANKE
-    ====================================== */
-
-    if (
-        lower.includes("danke")
-    ) {
-
-        const answer =
-            "Gerne.";
-
-
-        addMessage(
-            "JARVIS: " + answer,
-            "jarvis-message"
-        );
-
-
-        if (
-            typeof speak ===
-            "function"
-        ) {
-
-            speak(answer);
-
-        }
-
-
-        return;
-    }
-
-
-    /* ======================================
-       STANDARD
-    ====================================== */
-
-    const answer =
-        "Diese Funktion muss ich noch lernen.";
-
-
-    addMessage(
-        "JARVIS: " + answer,
-        "jarvis-message"
-    );
-
-
-    if (
-        typeof speak ===
-        "function"
-    ) {
-
-        speak(answer);
-
-    }
-
-}
-
-
-/* ==========================================
-   SENDEN BUTTON
-========================================== */
-
-document
-    .getElementById("sendButton")
-    .addEventListener(
-        "click",
-        function() {
-
-            sendText();
-
-        }
-    );
-
-
-/* ==========================================
-   ENTER
-========================================== */
-
-document
-    .getElementById("userInput")
-    .addEventListener(
-        "keydown",
-        function(event) {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                sendText();
-
-            }
-
-        }
-    );
-
-
-/* ==========================================
-   STIMME
-========================================== */
-
-document
-    .getElementById("voiceButton")
-    .addEventListener(
-        "click",
-        function() {
-
-            if (
-                typeof speak ===
-                "function"
-            ) {
-
-                speak(
-                    "Hallo. Ich bin JARVIS."
-                );
-
-            }
-
-        }
-    );
-
-
-/* ==========================================
-   MIKROFON
-========================================== */
-
-document
-    .getElementById("micButton")
-    .addEventListener(
-        "click",
-        function() {
-
-            if (
-                typeof startJarvis ===
-                "function"
-            ) {
-
-                startJarvis();
-
-            }
-
-        }
-    );
-
-
-console.log(
-    "JARVIS IST BEREIT."
 );
 
 </script>
 
+
 </body>
 
 </html>
-```
